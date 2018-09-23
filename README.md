@@ -1,4 +1,6 @@
-# Anime TV
+![logo](https://raw.githubusercontent.com/GnikDroy/AnimeTV/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png) 
+
+# Anime TV!
 > Watch your favorite anime on your android device.
 
 Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
@@ -7,6 +9,15 @@ It has a very low memory footprint and works off the anime1 server. The app scra
 mobile anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
 Currently, this app is not available in the app store but you can build your apk file and install on your device. 
  
+ 
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/1.png)
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/2.png)
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/3.png)
+ 
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/4.png)
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/5.png)
+ 
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/6.png)
 
 ## Installation
 

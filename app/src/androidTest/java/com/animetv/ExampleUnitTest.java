@@ -1,4 +1,4 @@
-package com.example.gnik.anime;
+package com.animetv;
 
 import org.junit.Test;
 
