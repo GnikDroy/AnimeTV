@@ -1,12 +1,28 @@
-# Anime TV
-> Watch your favorite anime on your android device.
+<p align="center">
+    <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png">
+
+<h1 align="center">Anime TV!</h1>
+    
+<h3 align="center"> Watch your favorite anime on your android device </h3>
+
+</p>
 
 Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
+
 
 It has a very low memory footprint and works off the anime1 server. The app scrapes the site and provides a pleasant
 mobile anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
 Currently, this app is not available in the app store but you can build your apk file and install on your device. 
  
+ 
+ <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/1.png" width="400">  <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/2.png" width="400" align="right">   
+ 
+ ***
+ 
+ <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/3.png" width="400">   <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/5.png" width="400" align="right">
+ 
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/4.png)
+ ![screenshot](https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/6.png)
 
 ## Installation
 
@@ -14,13 +30,11 @@ You need to have gradle installed in order to install the app
 
 OS X & Linux:
 
-```./gradlew assembleRelease
-```
+`./gradlew assembleRelease`
 
 Windows:
 
-```gradlew.bat assembleRelease
-```
+`gradlew.bat assembleRelease`
 
 The output apk will be in `/app/build/outputs/apk/release`.
 Transfer the apk to your device and install it to use the application. 
