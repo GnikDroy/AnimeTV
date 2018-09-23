@@ -11,7 +11,7 @@
 Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
 
 
-It has a very low memory footprint and works off the anime1 server. The app scrapes the site and provides a pleasant
+It has a very low memory footprint and works off the [Anime1](http://www.anime1.com/) server. The app scrapes the site and provides a pleasant
 mobile anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
 Currently, this app is not available in the app store but you can build your apk file and install on your device. 
  
