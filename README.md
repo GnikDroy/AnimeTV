@@ -1,0 +1,40 @@
+# Anime TV
+> Watch your favorite anime on your android device.
+
+Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
+
+It has a very low memory footprint and works off the anime1 server. The app scrapes the site and provides a pleasant
+mobile anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
+Currently, this app is not available in the app store but you can build your apk file and install on your device. 
+ 
+
+## Installation
+
+You need to have gradle installed in order to install the app
+
+OS X & Linux:
+
+```./gradlew assembleRelease
+```
+
+Windows:
+
+```gradlew.bat assembleRelease
+```
+
+The output apk will be in `/app/build/outputs/apk/release`.
+Transfer the apk to your device and install it to use the application. 
+
+
+## Contributing
+
+1. Fork it (<https://github.com/GnikDroy/AnimeTV/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
+Gnik - gnikdroy@gmail.com
+
+Distributed under the MIT license. See ``LICENSE`` for more information.
+

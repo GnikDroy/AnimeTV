@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/animeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:padding="10dp"
+        android:text="TextView"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:layout_editor_absoluteX="-38dp"
+        tools:layout_editor_absoluteY="-5dp" />
+
+    <View
+        android:id="@+id/view"
+        style="@style/Divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animeTitle" />
+</android.support.constraint.ConstraintLayout>
