@@ -5,6 +5,7 @@
     
 <h3 align="center"> Watch your favorite anime on your android device </h3>
 
+<img src="https://www.codefactor.io/repository/github/gnikdroy/animetv/badge">&nbsp;<img src="https://img.shields.io/github/license/mashape/apistatus.svg">
 </p>
 
 Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
