@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -16,6 +18,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -36,3 +40,4 @@ dependencies {
 
     implementation 'me.xdrop:fuzzywuzzy:1.1.10'
 }
+

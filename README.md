@@ -8,6 +8,7 @@
 <img src="https://www.codefactor.io/repository/github/gnikdroy/animetv/badge">&nbsp;<img src="https://img.shields.io/github/license/mashape/apistatus.svg">
 </p>
 
+
 Anime TV! is a small app that allows you to watch your favorite anime shows on your android device.
 
 
@@ -16,6 +17,7 @@ mobile anime viewing experience. Unlike other apps, this does not contain any ad
 Currently, this app is not available in the app store but you can build your apk file and install on your device. 
  
  
+<<<<<<< HEAD
  <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/1.png" width="400">  <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/screenshots/screenshots/2.png" width="400" align="right">   
  
  ***
