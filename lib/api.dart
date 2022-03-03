@@ -8,7 +8,7 @@ import 'dart:developer';
 final server = 'https://www.wcostream.com';
 const _statusOk = 200;
 
-Future<String?> _decode_episode_link(String b64, int num) async {
+String? _decode_episode_link(String b64, int num) {
   final js = b64
       .split(',')
       .map((x) => x.trim())
@@ -23,8 +23,8 @@ Future<String?> _decode_episode_link(String b64, int num) async {
   return url == null ? null : server + url;
 }
 
-Future<Map> get_episode_details(String url) async {
-  Map details = {};
+Future<Map<String, dynamic>> get_episode_details(String url) async {
+  var details = <String, dynamic>{};
 
   final response = await http.get(Uri.parse(url));
   final document = parser.parse(response.body);
@@ -46,8 +46,8 @@ Future<Map> get_episode_details(String url) async {
   return details;
 }
 
-Future<Map> get_show_details(String url) async {
-  var details = {};
+Future<Map<String, dynamic>> get_show_details(String url) async {
+  var details = <String, dynamic>{};
 
   final response = await http.get(Uri.parse(server + url));
   if (response.statusCode == _statusOk) {
@@ -75,17 +75,24 @@ Future<Map> get_show_details(String url) async {
   return details;
 }
 
-Future<List<Map>> get_popular() async {
-  List<Map> anime_details = [];
+Future<List<Map<String, String>>> get_popular() async {
+  List<Map<String, String>> anime_details = [];
   final response = await http.get(Uri.parse(server));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
     var anime_details = document
-        .querySelectorAll('div.menustyle>ul>li>a')
-        .map((e) => {'title': e.text.trim(), 'url': e.attributes['href']})
+        .querySelectorAll('ul.items>li')
+        .map((e) => {
+              'title': e.children[1].text.trim(),
+              'image':
+                  e.children[0].children[0].children[0].attributes['src'] ?? '',
+              'url': e.children[0].children[0].attributes['href'] ?? '',
+            })
+        .where((e) => e['url'] != '' && e['image'] != '')
         .toList();
+    return anime_details;
   } else {
-    log('Error: Fetch request returned status code ${response.statusCode}');
+    print('Error: Fetch request returned status code ${response.statusCode}');
   }
   return [];
 }

@@ -1,8 +1,11 @@
 import 'package:anime_tv/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
+import 'pages/view_episode.dart';
+import 'api.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const AnimeTV());
 }
 
@@ -13,9 +16,11 @@ class AnimeTV extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Anime TV',
-      theme: ThemeData.dark(),
-      home: const Home(),
-    );
+        title: 'Anime TV',
+        theme: ThemeData.dark(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const Home(),
+        });
   }
 }
