@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'recent.dart';
+import 'catalogue.dart';
 import 'package:anime_tv/app_bar.dart';
 
 class Home extends StatefulWidget {
@@ -50,20 +51,20 @@ class _HomeState extends State<Home> {
       {
         'label': 'Catalogue',
         'icon': Icons.video_collection,
-        'widget': Text('Catalogue'),
-        'accent': Color.fromARGB(255, 33, 117, 243),
+        'widget': const CatalogueGroup(),
+        'accent': const Color.fromARGB(255, 33, 117, 243),
       },
       {
         'label': 'Search',
         'icon': Icons.search,
         'widget': Text('Search'),
-        'accent': Color.fromARGB(255, 136, 86, 223),
+        'accent': const Color.fromARGB(255, 136, 86, 223),
       },
       {
         'label': 'Favorites',
         'icon': Icons.star,
         'widget': Text('Favorites'),
-        'accent': Color.fromARGB(255, 253, 164, 0),
+        'accent': const Color.fromARGB(255, 253, 164, 0),
       },
       {
         'label': 'Settings',

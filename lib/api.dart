@@ -5,8 +5,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer';
 
-final server = 'https://www.wcostream.com';
+const server = 'https://www.wcostream.com';
 const _statusOk = 200;
+const categories = <String, String>{
+  'Subbed': '/subbed-anime-list',
+  'Dubbed': '/dubbed-anime-list',
+  'Cartoons': '/cartoon-list',
+  'Movies': '/movie-list',
+  'OVAs': '/ova-list',
+};
 
 String? _decode_episode_link(String b64, int num) {
   final js = b64
@@ -75,12 +82,32 @@ Future<Map<String, dynamic>> get_show_details(String url) async {
   return details;
 }
 
+Future<List<Map<String, String>>> get_catalogue(String category) async {
+  var show_list = <Map<String, String>>[];
+  final response = await http.get(Uri.parse(server + category));
+  if (response.statusCode == _statusOk) {
+    final document = parser.parse(response.body);
+    var show_list = document
+        .querySelectorAll('div.ddmcc>ul>ul>li>a')
+        .map((e) => {
+              'title': e.text.trim(),
+              'url': e.attributes['href'] ?? '',
+            })
+        .where((e) => e['url'] != '')
+        .toList();
+    return show_list;
+  } else {
+    log('Error: Fetch request returned status code ${response.statusCode}');
+  }
+  return show_list;
+}
+
 Future<List<Map<String, String>>> get_popular() async {
-  List<Map<String, String>> anime_details = [];
+  List<Map<String, String>> show_details = [];
   final response = await http.get(Uri.parse(server));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
-    var anime_details = document
+    var show_details = document
         .querySelectorAll('ul.items>li')
         .map((e) => {
               'title': e.children[1].text.trim(),
@@ -90,9 +117,9 @@ Future<List<Map<String, String>>> get_popular() async {
             })
         .where((e) => e['url'] != '' && e['image'] != '')
         .toList();
-    return anime_details;
+    return show_details;
   } else {
-    print('Error: Fetch request returned status code ${response.statusCode}');
+    log('Error: Fetch request returned status code ${response.statusCode}');
   }
   return [];
 }
