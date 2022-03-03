@@ -14,7 +14,7 @@ class ViewEpisode extends StatefulWidget {
 
 class _ViewEpisodeState extends State<ViewEpisode> {
   InAppWebViewController? webViewController;
-  Map<String, dynamic>? details;
+  EpisodeDetails? details;
   bool error = false;
 
   @override
@@ -23,7 +23,7 @@ class _ViewEpisodeState extends State<ViewEpisode> {
       (details) {
         if (mounted) {
           setState(() {
-            if (details.containsKey('url') && details['url'] != null) {
+            if (details.videoLink != null) {
               this.details = details;
             } else {
               error = true;
@@ -55,7 +55,7 @@ class _ViewEpisodeState extends State<ViewEpisode> {
         source: qol_improvement_script_src,
         injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END);
     final webview = InAppWebView(
-      initialUrlRequest: URLRequest(url: Uri.parse(details?['url'] as String)),
+      initialUrlRequest: URLRequest(url: Uri.parse(details!.videoLink!)),
       initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(userAgent: userAgent)),
       initialUserScripts: UnmodifiableListView([qol_improvement_script]),
@@ -75,6 +75,9 @@ class _ViewEpisodeState extends State<ViewEpisode> {
 
     if (details != null) {
       body = get_web_view();
+    }
+    if (error) {
+      body = Text('Cannot fetch');
     }
     return Scaffold(
       appBar: get_app_bar(context, Colors.red),

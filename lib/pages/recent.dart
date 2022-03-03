@@ -11,7 +11,7 @@ class Recent extends StatefulWidget {
 }
 
 class _RecentState extends State<Recent> {
-  var popular_list = <Map<String, dynamic>>[];
+  var popular_list = <ShowDetails>[];
   bool load_complete = false;
   bool load_error = false;
 

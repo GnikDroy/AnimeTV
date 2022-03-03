@@ -60,7 +60,7 @@ class Catalogue extends StatefulWidget {
 
 class _CatalogueState extends State<Catalogue>
     with AutomaticKeepAliveClientMixin<Catalogue> {
-  var _catalogue = <Map<String, String>>[];
+  var _catalogue = <ShowDetails>[];
   var _filteredItemsIndices = <int>[];
 
   TextEditingController searchController = TextEditingController();
@@ -99,7 +99,7 @@ class _CatalogueState extends State<Catalogue>
       child: Container(
         padding: EdgeInsets.all(15),
         child: Text(
-          _catalogue[_filteredItemsIndices[index]]['title']!,
+          _catalogue[_filteredItemsIndices[index]].title!,
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -112,7 +112,7 @@ class _CatalogueState extends State<Catalogue>
     query = query.toLowerCase();
     _filteredItemsIndices.clear();
     final data = _catalogue.asMap().forEach((k, v) {
-      if (v['title']!.toLowerCase().contains(query)) {
+      if (v.title!.toLowerCase().contains(query)) {
         _filteredItemsIndices.add(k);
       }
     });

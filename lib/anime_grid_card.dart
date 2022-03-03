@@ -5,7 +5,7 @@ import 'package:anime_tv/api.dart';
 class AnimeGridCard extends StatelessWidget {
   const AnimeGridCard({Key? key, required this.details, this.height = 200.0})
       : super(key: key);
-  final Map<String, dynamic> details;
+  final ShowDetails details;
   final double height;
 
   @override
@@ -14,10 +14,9 @@ class AnimeGridCard extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       child: FadeInImage(
-        image: (details['image'] == null
-                ? const AssetImage('assets/cover_placeholder.jpg')
-                : NetworkImage('https:' + (details['image'] as String)))
-            as ImageProvider,
+        image: (details.image == null
+            ? const AssetImage('assets/cover_placeholder.jpg')
+            : NetworkImage('https:' + details.image!)) as ImageProvider,
         placeholder: const AssetImage('assets/cover_placeholder.jpg'),
         fit: BoxFit.cover,
       ),
@@ -32,7 +31,7 @@ class AnimeGridCard extends StatelessWidget {
     final title = Container(
       padding: const EdgeInsets.all(8),
       child: Text(
-        details['title'] as String,
+        details.title ?? '',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
@@ -58,7 +57,7 @@ class AnimeGridCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ViewEpisode(url: details['url'])),
+              builder: (context) => ViewEpisode(url: details.url!)),
         );
       },
       child: rounded_card,

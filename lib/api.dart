@@ -15,6 +15,31 @@ const categories = <String, String>{
   'OVAs': '/ova-list',
 };
 
+class EpisodeDetails {
+  String? url;
+  String? title;
+  String? videoLink;
+  EpisodeDetails({this.url, this.title, this.videoLink});
+}
+
+class ShowDetails {
+  String? title;
+  String? url;
+  String? image;
+  String? description;
+  List<EpisodeDetails>? episodeList;
+  List<String>? genreList;
+
+  ShowDetails({
+    this.title,
+    this.url,
+    this.image,
+    this.description,
+    this.episodeList,
+    this.genreList,
+  });
+}
+
 String? _decode_episode_link(String b64, int num) {
   final js = b64
       .split(',')
@@ -30,8 +55,8 @@ String? _decode_episode_link(String b64, int num) {
   return url == null ? null : server + url;
 }
 
-Future<Map<String, dynamic>> get_episode_details(String url) async {
-  var details = <String, dynamic>{};
+Future<EpisodeDetails> get_episode_details(String url) async {
+  var details = EpisodeDetails();
 
   final response = await http.get(Uri.parse(url));
   final document = parser.parse(response.body);
@@ -45,7 +70,7 @@ Future<Map<String, dynamic>> get_episode_details(String url) async {
         RegExp(r'\)\) - (\d+)').firstMatch(video_text)?.group(1) ?? '');
 
     if (b64 != null && num != null) {
-      details['url'] = _decode_episode_link(b64, num);
+      details.videoLink = _decode_episode_link(b64, num);
     }
   } else {
     log('Error: Fetch request returned status code ${response.statusCode}');
@@ -53,28 +78,30 @@ Future<Map<String, dynamic>> get_episode_details(String url) async {
   return details;
 }
 
-Future<Map<String, dynamic>> get_show_details(String url) async {
-  var details = <String, dynamic>{};
+Future<ShowDetails> get_show_details(String url) async {
+  var details = ShowDetails();
 
   final response = await http.get(Uri.parse(server + url));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
 
-    details['title'] = document.querySelector('td>h2')?.text.trim();
+    details.title = document.querySelector('td>h2')?.text.trim();
 
-    details['image'] =
+    details.image =
         document.querySelector('div#cat-img-desc>div>img')?.attributes['src'];
 
-    details['description'] =
+    details.description =
         document.querySelector('div#cat-img-desc>.iltext')?.text.trim();
 
-    details['genres'] = document
+    details.genreList = document
         .querySelectorAll('div#cat-genre>.wcobtn>a')
-        .map((g) => {g.text.trim()});
+        .map((g) => g.text.trim())
+        .toList();
 
-    details['episodes'] = document
+    details.episodeList = document
         .querySelectorAll('div#catlist-listview>ul>li>a')
-        .map((ep) => [ep.text.trim(), ep.attributes['href']])
+        .map((ep) =>
+            EpisodeDetails(title: ep.text.trim(), url: ep.attributes['href']))
         .toList();
   } else {
     log('Error: Fetch request returned status code ${response.statusCode}');
@@ -82,18 +109,20 @@ Future<Map<String, dynamic>> get_show_details(String url) async {
   return details;
 }
 
-Future<List<Map<String, String>>> get_catalogue(String category) async {
-  var show_list = <Map<String, String>>[];
+Future<List<ShowDetails>> get_catalogue(String category) async {
+  var show_list = <ShowDetails>[];
   final response = await http.get(Uri.parse(server + category));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
     var show_list = document
         .querySelectorAll('div.ddmcc>ul>ul>li>a')
-        .map((e) => {
-              'title': e.text.trim(),
-              'url': e.attributes['href'] ?? '',
-            })
-        .where((e) => e['url'] != '')
+        .map(
+          (e) => ShowDetails(
+            title: e.text.trim(),
+            url: e.attributes['href'] ?? '',
+          ),
+        )
+        .where((e) => e.url != '')
         .toList();
     return show_list;
   } else {
@@ -102,20 +131,22 @@ Future<List<Map<String, String>>> get_catalogue(String category) async {
   return show_list;
 }
 
-Future<List<Map<String, String>>> get_popular() async {
-  List<Map<String, String>> show_details = [];
+Future<List<ShowDetails>> get_popular() async {
+  List<ShowDetails> show_details = [];
   final response = await http.get(Uri.parse(server));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
     var show_details = document
         .querySelectorAll('ul.items>li')
-        .map((e) => {
-              'title': e.children[1].text.trim(),
-              'image':
-                  e.children[0].children[0].children[0].attributes['src'] ?? '',
-              'url': e.children[0].children[0].attributes['href'] ?? '',
-            })
-        .where((e) => e['url'] != '' && e['image'] != '')
+        .map(
+          (e) => ShowDetails(
+            title: e.children[1].text.trim(),
+            image:
+                e.children[0].children[0].children[0].attributes['src'] ?? '',
+            url: e.children[0].children[0].attributes['href'] ?? '',
+          ),
+        )
+        .where((e) => e.url != '' && e.image != '')
         .toList();
     return show_details;
   } else {
