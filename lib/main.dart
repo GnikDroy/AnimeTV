@@ -6,6 +6,7 @@ import 'api.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Paint.enableDithering = true;
   runApp(const AnimeTV());
 }
 
