@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Category {
   final String title;
   final String url;
@@ -27,6 +29,24 @@ class ShowDetails {
     this.episodeList,
     this.genreList,
   });
+
+  static ShowDetails fromMap(Map<String, String?> show) {
+    return ShowDetails(
+      title: show["title"],
+      description: show['description'],
+      image: show['image'],
+      url: show['url'],
+    );
+  }
+
+  Map<String, String?> toMap() {
+    return {
+      'title': title,
+      'description': description,
+      'image': image,
+      'url': url,
+    };
+  }
 }
 
 const categories = <Category>[

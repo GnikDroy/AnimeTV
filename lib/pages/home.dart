@@ -1,3 +1,4 @@
+import 'package:anime_tv/pages/favorites.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _HomeState extends State<Home> {
       {
         'label': 'Recent',
         'icon': Icons.movie,
-        'widget': const RecentAnimeGrid(),
+        'widget': RecentAnimeGrid(),
         'accent': Colors.red,
       },
       {
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
       {
         'label': 'Favorites',
         'icon': Icons.star,
-        'widget': genericNetworkError,
+        'widget': FavoritesView(),
         'accent': Color.fromARGB(255, 253, 164, 0),
       },
       {
