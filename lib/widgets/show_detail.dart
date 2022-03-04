@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
-import 'package:anime_tv/pages/view_episode.dart';
+import 'package:anime_tv/widgets/episode_list.dart';
+import 'package:anime_tv/widgets/show_description.dart';
 
 class ShowDetailView extends StatefulWidget {
   final String url;
@@ -77,135 +78,5 @@ class _ShowDetailViewState extends State<ShowDetailView> {
       ],
     );
     return stack;
-  }
-}
-
-class ShowDescription extends StatelessWidget {
-  const ShowDescription({Key? key, required this.details}) : super(key: key);
-  final ShowDetails details;
-
-  @override
-  Widget build(BuildContext context) {
-    final title = Text(
-      details.title ?? '',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-        fontSize: 28,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-
-    final controls = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Opacity(
-          opacity: 0.6,
-          child: Text(
-            '${details.episodeList?.length ?? 0} Episodes',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.star, color: Colors.amber),
-        ),
-      ],
-    );
-
-    final genreTags = Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: (details.genreList ?? [])
-          .map(
-            (x) => Chip(
-              backgroundColor: Colors.deepPurple,
-              label: Text(
-                x,
-              ),
-            ),
-          )
-          .toList(),
-    );
-
-    final plot = Text(
-      details.description ?? '',
-      style: TextStyle(fontSize: 16, height: 1.4),
-    );
-
-    final description = Padding(
-      padding: const EdgeInsets.all(25),
-      child: Column(
-        children: [
-          title,
-          const SizedBox(height: 15),
-          controls,
-          const SizedBox(height: 15),
-          plot,
-          const SizedBox(height: 15),
-          genreTags,
-        ],
-      ),
-    );
-    return description;
-  }
-}
-
-class EpisodeList extends StatelessWidget {
-  EpisodeList({Key? key, required this.details, required this.reorder})
-      : super(key: key);
-
-  final ShowDetails details;
-  void Function() reorder;
-
-  @override
-  Widget build(BuildContext context) {
-    final episode_list = (details.episodeList ?? []).map(
-      (ep) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 48, 48, 48),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ViewEpisode(url: ep.url!)),
-                );
-              },
-              icon: Icon(Icons.play_circle),
-              label: Padding(
-                padding: EdgeInsets.all(18),
-                child: Text(
-                  ep.title ?? '',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    ).toList();
-
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              onPressed: reorder,
-              icon: const Icon(Icons.sort_by_alpha),
-            ),
-          ),
-          ...episode_list,
-        ],
-      ),
-    );
   }
 }

@@ -28,7 +28,6 @@ class CatalogueGroup extends StatelessWidget {
                     .map(
                       (x) => Catalogue(
                         category: x,
-                        hasEpisodes: x.title != 'Movies' && x.title != 'OVAs',
                       ),
                     )
                     .toList()),

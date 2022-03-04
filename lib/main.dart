@@ -1,8 +1,6 @@
-import 'package:anime_tv/pages/home.dart';
 import 'package:flutter/material.dart';
-import 'pages/home.dart';
-import 'pages/view_episode.dart';
-import 'api/api.dart';
+import 'package:anime_tv/pages/home.dart';
+import 'package:anime_tv/routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +20,8 @@ class AnimeTV extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const Home(),
+          ViewEpisodeRoute.routeName: (context) => const ViewEpisodeRoute(),
+          ShowDetailRoute.routeName: (context) => const ShowDetailRoute(),
         });
   }
 }

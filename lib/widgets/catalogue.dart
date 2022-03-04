@@ -1,5 +1,4 @@
-import 'package:anime_tv/pages/show_detail_page.dart';
-import 'package:anime_tv/pages/view_episode.dart';
+import 'package:anime_tv/routes.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/api.dart';
@@ -9,12 +8,11 @@ class Catalogue extends StatefulWidget {
   final Category _category;
   final bool _hasEpisodes;
 
-  const Catalogue({
+  Catalogue({
     Key? key,
     required Category category,
-    required bool hasEpisodes,
   })  : _category = category,
-        _hasEpisodes = hasEpisodes,
+        _hasEpisodes = (category.title != 'Movies' && category.title != 'OVAs'),
         super(key: key);
 
   @override
@@ -66,19 +64,17 @@ class _CatalogueState extends State<Catalogue>
         final detail = _catalogue[_filteredItemsIndices[index]];
         if (widget._hasEpisodes) {
           if (detail.url != null) {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => ShowDetailPage(url: detail.url!),
-              ),
+              ShowDetailRoute.routeName,
+              arguments: detail.url!,
             );
           }
         } else {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => ViewEpisode(url: server + detail.url!),
-            ),
+            ViewEpisodeRoute.routeName,
+            arguments: server + detail.url!,
           );
         }
       },

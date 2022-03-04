@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = <Map<String, dynamic>>[
+    const pages = <Map<String, dynamic>>[
       {
         'label': 'Recent',
         'icon': Icons.movie,
@@ -53,8 +53,8 @@ class _HomeState extends State<Home> {
       {
         'label': 'Catalogue',
         'icon': Icons.video_collection,
-        'accent': const Color.fromARGB(255, 33, 117, 243),
-        'widget': const CatalogueGroup(
+        'accent': Color.fromARGB(255, 33, 117, 243),
+        'widget': CatalogueGroup(
           tabBarColor: Color.fromARGB(255, 33, 117, 243),
         ),
       },
@@ -62,13 +62,13 @@ class _HomeState extends State<Home> {
         'label': 'Search',
         'icon': Icons.search,
         'widget': genericNetworkError,
-        'accent': const Color.fromARGB(255, 136, 86, 223),
+        'accent': Color.fromARGB(255, 136, 86, 223),
       },
       {
         'label': 'Favorites',
         'icon': Icons.star,
         'widget': genericNetworkError,
-        'accent': const Color.fromARGB(255, 253, 164, 0),
+        'accent': Color.fromARGB(255, 253, 164, 0),
       },
       {
         'label': 'Settings',
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
       },
     ];
 
-    return Scaffold(
+    final scaffold = Scaffold(
       appBar: AnimeTVAppBar(borderColor: pages[_navigationIdx]['accent']),
       body: SlantGradientBackgroundContainer(
         child: IndexedStack(
@@ -87,6 +87,11 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: buildNavBar(pages),
+    );
+
+    return GestureDetector(
+      onTapDown: (details) => FocusManager.instance.primaryFocus?.unfocus(),
+      child: scaffold,
     );
   }
 }

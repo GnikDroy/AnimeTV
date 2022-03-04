@@ -1,4 +1,4 @@
-import 'package:anime_tv/pages/view_episode.dart';
+import 'package:anime_tv/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
 
@@ -55,10 +55,10 @@ class AnimeGridCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-              builder: (context) => ViewEpisode(url: details.url!)),
+          ViewEpisodeRoute.routeName,
+          arguments: details.url!,
         );
       },
       child: roundedCard,
