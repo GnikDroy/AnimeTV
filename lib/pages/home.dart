@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      appBar: get_app_bar(context, pages[_navigation_index]['accent']),
+      appBar: AnimeTVAppBar(borderColor: pages[_navigation_index]['accent']),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

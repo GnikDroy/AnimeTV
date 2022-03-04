@@ -11,7 +11,7 @@ class ShowDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: get_app_bar(context, Colors.red),
+      appBar: const AnimeTVAppBar(borderColor: Colors.red),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

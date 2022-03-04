@@ -80,7 +80,7 @@ class _ViewEpisodeState extends State<ViewEpisode> {
       body = Text('Cannot fetch');
     }
     return Scaffold(
-      appBar: get_app_bar(context, Colors.red),
+      appBar: const AnimeTVAppBar(borderColor: Colors.red),
       body: body,
     );
   }

@@ -1,37 +1,56 @@
 import 'package:flutter/material.dart';
 
-AppBar get_app_bar(BuildContext context, Color color,
-    {String title_str = 'Anime TV'}) {
-  var title_widgets = <Widget>[];
+class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final Color color;
+  final Color backgroundColor;
+  final Color borderColor;
 
-  if (!(ModalRoute.of(context)?.canPop ?? false)) {
-    title_widgets.add(const Icon(
-      Icons.live_tv_outlined,
-      size: 35,
-      color: Color.fromARGB(230, 255, 255, 255),
-    ));
-    title_widgets.add(const SizedBox(width: 15));
-  }
+  const AnimeTVAppBar({
+    Key? key,
+    this.title = 'Anime TV',
+    this.color = const Color.fromARGB(230, 255, 255, 255),
+    this.backgroundColor = const Color.fromARGB(255, 24, 24, 24),
+    this.borderColor = Colors.white,
+  }) : super(key: key);
 
-  title_widgets.add(Text(
-    title_str,
-    style: const TextStyle(
-      color: Color.fromARGB(230, 255, 255, 255),
-    ),
-  ));
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
-  final title = Row(
-    children: title_widgets,
-  );
+  @override
+  Widget build(BuildContext context) {
+    var titleWidgets = <Widget>[];
 
-  return AppBar(
-    shape: Border(
-      bottom: BorderSide(
+    if (!(ModalRoute.of(context)?.canPop ?? false)) {
+      titleWidgets.add(
+        Icon(
+          Icons.live_tv_outlined,
+          size: 35,
+          color: color,
+        ),
+      );
+      titleWidgets.add(const SizedBox(width: 15));
+    }
+
+    titleWidgets.add(Text(
+      this.title,
+      style: TextStyle(
         color: color,
       ),
-    ),
-    elevation: 0,
-    backgroundColor: Color.fromARGB(255, 24, 24, 24),
-    title: title,
-  );
+    ));
+
+    final title = Row(
+      children: titleWidgets,
+    );
+    return AppBar(
+      shape: Border(
+        bottom: BorderSide(
+          color: borderColor,
+        ),
+      ),
+      elevation: 0,
+      backgroundColor: backgroundColor,
+      title: title,
+    );
+  }
 }
