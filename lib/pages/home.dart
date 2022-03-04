@@ -1,8 +1,9 @@
+import 'package:anime_tv/widgets/error_card.dart';
+import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
-import 'package:anime_tv/pages/show_detail_view.dart';
-import 'package:anime_tv/pages/recent.dart';
-import 'package:anime_tv/pages/catalogue.dart';
-import 'package:anime_tv/app_bar.dart';
+import 'package:anime_tv/pages/home/recent_anime.dart';
+import 'package:anime_tv/pages/home/catalogue_group.dart';
+import 'package:anime_tv/widgets/app_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,14 +13,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _navigation_index = 0;
+  int _navigationIdx = 0;
 
   @override
   void initState() {
     super.initState();
   }
 
-  BottomNavigationBar build_nav_bar(List<Map<String, dynamic>> pages) {
+  BottomNavigationBar buildNavBar(List<Map<String, dynamic>> pages) {
     final items = pages
         .map((x) => BottomNavigationBarItem(
               icon: Icon(x['icon'] as IconData),
@@ -30,9 +31,9 @@ class _HomeState extends State<Home> {
         .toList();
 
     return BottomNavigationBar(
-      currentIndex: _navigation_index,
+      currentIndex: _navigationIdx,
       onTap: (index) => setState(() {
-        _navigation_index = index;
+        _navigationIdx = index;
       }),
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.black,
@@ -46,56 +47,46 @@ class _HomeState extends State<Home> {
       {
         'label': 'Recent',
         'icon': Icons.movie,
-        'widget': const Recent(),
+        'widget': const RecentAnimeGrid(),
         'accent': Colors.red,
       },
       {
         'label': 'Catalogue',
         'icon': Icons.video_collection,
-        'widget': const CatalogueGroup(),
         'accent': const Color.fromARGB(255, 33, 117, 243),
+        'widget': const CatalogueGroup(
+          tabBarColor: Color.fromARGB(255, 33, 117, 243),
+        ),
       },
       {
         'label': 'Search',
         'icon': Icons.search,
-        'widget': const ShowDetailView(url: '/anime/blade-runner-black-lotus'),
+        'widget': genericNetworkError,
         'accent': const Color.fromARGB(255, 136, 86, 223),
       },
       {
         'label': 'Favorites',
         'icon': Icons.star,
-        'widget': Text('Favorites'),
+        'widget': genericNetworkError,
         'accent': const Color.fromARGB(255, 253, 164, 0),
       },
       {
         'label': 'Settings',
         'icon': Icons.settings,
-        'widget': Text('Settings'),
+        'widget': genericNetworkError,
         'accent': Colors.green,
       },
     ];
 
     return Scaffold(
-      appBar: AnimeTVAppBar(borderColor: pages[_navigation_index]['accent']),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromARGB(255, 18, 20, 36),
-                Color.fromARGB(255, 33, 36, 59),
-                // Color.fromARGB(255, 53, 53, 53),
-              ]),
-        ),
+      appBar: AnimeTVAppBar(borderColor: pages[_navigationIdx]['accent']),
+      body: SlantGradientBackgroundContainer(
         child: IndexedStack(
-          index: _navigation_index,
+          index: _navigationIdx,
           children: pages.map((x) => x['widget'] as Widget).toList(),
         ),
       ),
-      bottomNavigationBar: build_nav_bar(pages),
+      bottomNavigationBar: buildNavBar(pages),
     );
   }
 }

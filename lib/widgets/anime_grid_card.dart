@@ -1,12 +1,13 @@
 import 'package:anime_tv/pages/view_episode.dart';
 import 'package:flutter/material.dart';
-import 'package:anime_tv/api.dart';
+import 'package:anime_tv/api/models.dart';
 
 class AnimeGridCard extends StatelessWidget {
-  const AnimeGridCard({Key? key, required this.details, this.height = 200.0})
-      : super(key: key);
   final ShowDetails details;
   final double height;
+
+  const AnimeGridCard(this.details, {Key? key, this.height = 200.0})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class AnimeGridCard extends StatelessWidget {
       ],
     );
 
-    var rounded_card = ClipRRect(
+    final roundedCard = ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: stack,
     );
@@ -60,7 +61,7 @@ class AnimeGridCard extends StatelessWidget {
               builder: (context) => ViewEpisode(url: details.url!)),
         );
       },
-      child: rounded_card,
+      child: roundedCard,
     );
   }
 }

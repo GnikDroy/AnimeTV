@@ -1,35 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:anime_tv/api.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:anime_tv/widgets/error_card.dart';
+import 'package:anime_tv/api/api.dart';
+import 'package:anime_tv/api/models.dart';
 import 'package:anime_tv/pages/view_episode.dart';
-import 'package:anime_tv/app_bar.dart';
-
-class ShowDetailPage extends StatelessWidget {
-  const ShowDetailPage({Key? key, required this.url}) : super(key: key);
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AnimeTVAppBar(borderColor: Colors.red),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromARGB(255, 18, 20, 36),
-                Color.fromARGB(255, 33, 36, 59),
-                // Color.fromARGB(255, 53, 53, 53),
-              ]),
-        ),
-        child: ShowDetailView(url: url),
-      ),
-    );
-  }
-}
 
 class ShowDetailView extends StatefulWidget {
   final String url;
@@ -42,8 +15,8 @@ class ShowDetailView extends StatefulWidget {
 
 class _ShowDetailViewState extends State<ShowDetailView> {
   var details = ShowDetails();
-  bool load_complete = false;
-  bool load_error = false;
+  bool loadComplete = false;
+  bool loadError = false;
 
   @override
   void initState() {
@@ -52,16 +25,16 @@ class _ShowDetailViewState extends State<ShowDetailView> {
         if (mounted) {
           setState(() {
             this.details = details;
-            load_complete = true;
-            load_error = false;
+            loadComplete = true;
+            loadError = false;
           });
         }
       },
       onError: (err) {
         if (mounted) {
           setState(() {
-            load_error = true;
-            load_complete = false;
+            loadError = true;
+            loadComplete = false;
           });
         }
       },
@@ -71,15 +44,13 @@ class _ShowDetailViewState extends State<ShowDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    if (load_error) {
-      return Text("Cannot fetch");
-    } else if (!load_complete) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+    if (loadError) {
+      return genericNetworkError;
+    } else if (!loadComplete) {
+      return const Center(child: CircularProgressIndicator());
     }
 
-    final cover = Container(
+    final cover = SizedBox(
       height: MediaQuery.of(context).size.height / 2.0,
       width: double.infinity,
       child: FadeInImage(

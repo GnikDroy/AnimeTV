@@ -2,7 +2,7 @@ import 'package:anime_tv/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/view_episode.dart';
-import 'api.dart';
+import 'api/api.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

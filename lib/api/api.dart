@@ -4,41 +4,10 @@ import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer';
+import 'package:anime_tv/api/models.dart';
 
 const server = 'https://www.wcostream.com';
 const _statusOk = 200;
-const categories = <String, String>{
-  'Subbed': '/subbed-anime-list',
-  'Dubbed': '/dubbed-anime-list',
-  'Cartoons': '/cartoon-list',
-  'Movies': '/movie-list',
-  'OVAs': '/ova-list',
-};
-
-class EpisodeDetails {
-  String? url;
-  String? title;
-  String? videoLink;
-  EpisodeDetails({this.url, this.title, this.videoLink});
-}
-
-class ShowDetails {
-  String? title;
-  String? url;
-  String? image;
-  String? description;
-  List<EpisodeDetails>? episodeList;
-  List<String>? genreList;
-
-  ShowDetails({
-    this.title,
-    this.url,
-    this.image,
-    this.description,
-    this.episodeList,
-    this.genreList,
-  });
-}
 
 String? _decode_episode_link(String b64, int num) {
   final js = b64
