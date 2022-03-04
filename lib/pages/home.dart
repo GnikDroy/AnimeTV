@@ -1,5 +1,5 @@
 import 'package:anime_tv/pages/home/favorites.dart';
-import 'package:anime_tv/pages/home/settings.dart';
+import 'package:anime_tv/pages/home/search.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
       {
         'label': 'Search',
         'icon': Icons.search,
-        'widget': genericNetworkError,
+        'widget': SearchView(),
         'accent': Color.fromARGB(255, 136, 86, 223),
       },
       {
@@ -71,12 +71,6 @@ class _HomeState extends State<Home> {
         'icon': Icons.star,
         'widget': FavoritesView(),
         'accent': Color.fromARGB(255, 253, 164, 0),
-      },
-      {
-        'label': 'Settings',
-        'icon': Icons.settings,
-        'widget': SettingsView(accent: Colors.teal),
-        'accent': Colors.teal,
       },
     ];
 

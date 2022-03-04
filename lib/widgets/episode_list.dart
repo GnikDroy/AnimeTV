@@ -1,8 +1,9 @@
 import 'package:anime_tv/routes.dart';
+import 'package:anime_tv/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
 
-class EpisodeList extends StatelessWidget {
+class EpisodeList extends StatefulWidget {
   final ShowDetails details;
   final void Function() reorder;
 
@@ -10,8 +11,29 @@ class EpisodeList extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<EpisodeList> createState() => _EpisodeListState();
+}
+
+class _EpisodeListState extends State<EpisodeList> {
+  var watchedUrls = <String>[];
+
+  @override
+  void initState() {
+    getWatchedEpisodeUrls().then((watched) {
+      setState(() {
+        watchedUrls = widget.details.episodeList
+                ?.where((details) => watched.contains(details.url))
+                .map((details) => details.url!)
+                .toList() ??
+            [];
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final episodeList = (details.episodeList ?? []).map(
+    final episodeList = (widget.details.episodeList ?? []).map(
       (ep) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -28,7 +50,10 @@ class EpisodeList extends StatelessWidget {
                   arguments: ep.url!,
                 );
               },
-              icon: const Icon(Icons.play_circle),
+              icon: Icon(Icons.play_circle,
+                  color: watchedUrls.contains(ep.url)
+                      ? Colors.grey
+                      : Colors.white),
               label: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Text(
@@ -50,7 +75,7 @@ class EpisodeList extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              onPressed: reorder,
+              onPressed: widget.reorder,
               icon: const Icon(Icons.sort_by_alpha),
             ),
           ),

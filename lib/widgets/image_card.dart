@@ -11,7 +11,7 @@ class ImageCard extends StatelessWidget {
     required this.title,
     required this.image,
     this.placeholder = const AssetImage('assets/cover_placeholder.jpg'),
-    this.height = 200.0,
+    this.height = 400.0,
   }) : super(key: key);
 
   @override

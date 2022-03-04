@@ -1,3 +1,4 @@
+import 'package:anime_tv/utils.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _ViewEpisodeState extends State<ViewEpisode> {
           setState(() {
             if (details.videoLink != null) {
               this.details = details;
+              addWatched(widget.url);
             } else {
               loadError = true;
             }

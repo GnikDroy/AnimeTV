@@ -37,6 +37,12 @@ Future<List<Map<String, String?>>> getFavorites() async {
   });
 }
 
+void setFavorites(List<Map<String, String?>> favorites) async {
+  return SharedPreferences.getInstance().then((pref) {
+    pref.setString('favoriteShows', json.encode(favorites));
+  });
+}
+
 Future<bool> isShowFavorite(String? url) async {
   return SharedPreferences.getInstance().then((pref) {
     final favoriteShowsStr = pref.getString('favoriteShows');
@@ -77,4 +83,26 @@ removeFavorite(ShowDetails details) async {
       });
     }
   });
+}
+
+setWatchedEpisodeUrls(List<String> urls) async {
+  return SharedPreferences.getInstance()
+      .then((pref) => pref.setStringList('watchedEpisodes', urls));
+}
+
+Future<List<String>> getWatchedEpisodeUrls() async {
+  return SharedPreferences.getInstance()
+      .then((pref) => pref.getStringList('watchedEpisodes') ?? []);
+}
+
+Future<bool> isWatchedEpisode(String url) async {
+  return getWatchedEpisodeUrls().then((urls) => urls.contains(url));
+}
+
+addWatched(String url) async {
+  if (!await isWatchedEpisode(url)) {
+    var urls = await getWatchedEpisodeUrls();
+    urls.add(url);
+    await setWatchedEpisodeUrls(urls);
+  }
 }

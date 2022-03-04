@@ -22,6 +22,7 @@ class AnimeTV extends StatelessWidget {
           '/': (context) => const Home(),
           ViewEpisodeRoute.routeName: (context) => const ViewEpisodeRoute(),
           ShowDetailRoute.routeName: (context) => const ShowDetailRoute(),
+          SearchResultsRoute.routeName: (context) => const SearchResultsRoute(),
         });
   }
 }

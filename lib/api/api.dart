@@ -100,6 +100,32 @@ Future<List<ShowDetails>> get_catalogue(String category) async {
   return show_list;
 }
 
+Future<List<ShowDetails>> searchShow(String query) async {
+  final body = 'catara=${Uri.encodeQueryComponent(query)}&konuara=series';
+  final response = await http.post(
+    Uri.parse('$server/search'),
+    headers: {"content-type": "application/x-www-form-urlencoded"},
+    body: utf8.encode(body),
+  );
+  if (response.statusCode == _statusOk) {
+    final document = parser.parse(response.body);
+    return document
+        .querySelectorAll('div.iccerceve')
+        .map(
+          (x) => ShowDetails(
+            title: x.children[0].children[0].text.trim(),
+            url: x.children[0].children[0].attributes['href'],
+            image: x.children[1].children[0].attributes['src'],
+          ),
+        )
+        .where((e) => e.url != null)
+        .toList();
+  } else {
+    log('Error: Fetch request returned status code ${response.statusCode}');
+  }
+  return [];
+}
+
 Future<List<RecentEpisode>> getRecentEpisodes() async {
   final response = await http.get(Uri.parse(server));
   if (response.statusCode == _statusOk) {

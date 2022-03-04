@@ -113,7 +113,6 @@ class _CatalogueState extends State<Catalogue>
       controller: searchController,
       onChanged: filterResults,
       decoration: const InputDecoration(
-        labelText: "Search",
         hintText: "Search",
         prefixIcon: Icon(Icons.search),
         isDense: true,
@@ -126,7 +125,7 @@ class _CatalogueState extends State<Catalogue>
     );
 
     final listView = ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+      padding: const EdgeInsets.all(5),
       itemCount: _filteredItemsIndices.length,
       itemBuilder: (context, index) => buildListItem(index),
       separatorBuilder: (context, index) => const SizedBox(height: 8),
@@ -136,7 +135,10 @@ class _CatalogueState extends State<Catalogue>
     return Column(
       children: [
         const SizedBox(height: 8),
-        searchBar,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: searchBar,
+        ),
         const SizedBox(height: 8),
         Expanded(child: listView),
       ],
