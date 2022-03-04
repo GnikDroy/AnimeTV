@@ -100,24 +100,24 @@ Future<List<ShowDetails>> get_catalogue(String category) async {
   return show_list;
 }
 
-Future<List<ShowDetails>> get_popular() async {
-  List<ShowDetails> show_details = [];
+Future<List<RecentEpisode>> getRecentEpisodes() async {
   final response = await http.get(Uri.parse(server));
   if (response.statusCode == _statusOk) {
     final document = parser.parse(response.body);
-    var show_details = document
+    var recentEpisode = document
         .querySelectorAll('ul.items>li')
         .map(
-          (e) => ShowDetails(
-            title: e.children[1].text.trim(),
-            image:
-                e.children[0].children[0].children[0].attributes['src'] ?? '',
-            url: e.children[0].children[0].attributes['href'] ?? '',
+          (e) => RecentEpisode(
+            image: e.children[0].children[0].children[0].attributes['src'],
+            episode: EpisodeDetails(
+              title: e.children[1].text.trim(),
+              url: e.children[0].children[0].attributes['href'],
+            ),
           ),
         )
-        .where((e) => e.url != '' && e.image != '')
+        .where((e) => e.episode.url != null && e.image != null)
         .toList();
-    return show_details;
+    return recentEpisode;
   } else {
     log('Error: Fetch request returned status code ${response.statusCode}');
   }

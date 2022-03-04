@@ -53,13 +53,17 @@ class _ShowDescriptionState extends State<ShowDescription> {
       ),
     );
 
+    final episodeText = (widget.details.episodeList ?? []).length == 0
+        ? ''
+        : '${widget.details.episodeList?.length} Episodes';
+
     final controls = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Opacity(
           opacity: 0.6,
           child: Text(
-            '${widget.details.episodeList?.length ?? 0} Episodes',
+            episodeText,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

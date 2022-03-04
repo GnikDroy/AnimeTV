@@ -6,13 +6,6 @@ class Category {
   const Category(this.title, this.url);
 }
 
-class EpisodeDetails {
-  String? url;
-  String? title;
-  String? videoLink;
-  EpisodeDetails({this.url, this.title, this.videoLink});
-}
-
 class ShowDetails {
   String? title;
   String? url;
@@ -47,6 +40,19 @@ class ShowDetails {
       'url': url,
     };
   }
+}
+
+class EpisodeDetails {
+  String? url;
+  String? title;
+  String? videoLink;
+  EpisodeDetails({this.url, this.title, this.videoLink});
+}
+
+class RecentEpisode {
+  String? image;
+  EpisodeDetails episode;
+  RecentEpisode({this.image, required this.episode});
 }
 
 const categories = <Category>[

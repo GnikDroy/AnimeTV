@@ -1,8 +1,8 @@
-import 'package:anime_tv/pages/favorites.dart';
+import 'package:anime_tv/pages/home/favorites.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
-import 'package:anime_tv/pages/home/recent_anime.dart';
+import 'package:anime_tv/pages/home/recent_episode.dart';
 import 'package:anime_tv/pages/home/catalogue_group.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
       {
         'label': 'Recent',
         'icon': Icons.movie,
-        'widget': RecentAnimeGrid(),
+        'widget': RecentEpisodeGrid(),
         'accent': Colors.red,
       },
       {

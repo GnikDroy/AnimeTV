@@ -1,13 +1,18 @@
-import 'package:anime_tv/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:anime_tv/api/models.dart';
 
-class AnimeGridCard extends StatelessWidget {
-  final ShowDetails details;
+class ImageCard extends StatelessWidget {
   final double height;
+  final ImageProvider image;
+  final ImageProvider placeholder;
+  final String title;
 
-  const AnimeGridCard(this.details, {Key? key, this.height = 200.0})
-      : super(key: key);
+  const ImageCard({
+    Key? key,
+    required this.title,
+    required this.image,
+    this.placeholder = const AssetImage('assets/cover_placeholder.jpg'),
+    this.height = 200.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +20,8 @@ class AnimeGridCard extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       child: FadeInImage(
-        image: (details.image == null
-            ? const AssetImage('assets/cover_placeholder.jpg')
-            : NetworkImage('https:' + details.image!)) as ImageProvider,
-        placeholder: const AssetImage('assets/cover_placeholder.jpg'),
+        image: image,
+        placeholder: placeholder,
         fit: BoxFit.cover,
       ),
     );
@@ -29,10 +32,10 @@ class AnimeGridCard extends StatelessWidget {
       color: Colors.black45,
     );
 
-    final title = Container(
+    final titleWidget = Container(
       padding: const EdgeInsets.all(8),
       child: Text(
-        details.title ?? '',
+        title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
@@ -44,7 +47,7 @@ class AnimeGridCard extends StatelessWidget {
       children: [
         cover,
         overlay,
-        title,
+        titleWidget,
       ],
     );
 
@@ -53,15 +56,6 @@ class AnimeGridCard extends StatelessWidget {
       child: stack,
     );
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          ViewEpisodeRoute.routeName,
-          arguments: details.url!,
-        );
-      },
-      child: roundedCard,
-    );
+    return roundedCard;
   }
 }

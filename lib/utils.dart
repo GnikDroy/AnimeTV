@@ -20,8 +20,8 @@ Future<bool> isShowFavorite(String? url) async {
     final favoriteShowsStr = pref.getString('favoriteShows');
     if (favoriteShowsStr != null) {
       List<dynamic> favoriteShows = jsonDecode(favoriteShowsStr);
-      for (final dynshow in favoriteShows) {
-        Map<String, String> show = Map<String, String>.from(dynshow);
+      for (final dynShow in favoriteShows) {
+        Map<String, String> show = Map<String, String>.from(dynShow);
         if (ShowDetails.fromMap(show).url == url) {
           return true;
         }
