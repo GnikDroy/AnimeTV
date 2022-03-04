@@ -58,7 +58,7 @@ class _CatalogueState extends State<Catalogue>
   Widget buildListItem(int index) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: const Color.fromARGB(255, 48, 48, 48),
+        primary: Theme.of(context).primaryColor,
       ),
       onPressed: () {
         final detail = _catalogue[_filteredItemsIndices[index]];

@@ -38,7 +38,8 @@ class ImageCard extends StatelessWidget {
         title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        style: const TextStyle(
+            fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
       ),
     );
 

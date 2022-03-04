@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:anime_tv/utils.dart';
 
 class SlantGradientBackgroundContainer extends StatelessWidget {
   const SlantGradientBackgroundContainer({
     Key? key,
     required this.child,
-    this.colors = const [
-      Color.fromARGB(255, 18, 20, 36),
-      Color.fromARGB(255, 33, 36, 59),
-    ],
+    this.colors,
   }) : super(key: key);
 
   final Widget? child;
-  final List<Color> colors;
+  final List<Color>? colors;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,11 @@ class SlantGradientBackgroundContainer extends StatelessWidget {
         gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: colors),
+            colors: colors ??
+                [
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Theme.of(context).scaffoldBackgroundColor.darken(),
+                ]),
       ),
       child: child,
     );

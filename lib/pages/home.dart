@@ -1,4 +1,5 @@
 import 'package:anime_tv/pages/home/favorites.dart';
+import 'package:anime_tv/pages/home/settings.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +75,8 @@ class _HomeState extends State<Home> {
       {
         'label': 'Settings',
         'icon': Icons.settings,
-        'widget': genericNetworkError,
-        'accent': Colors.green,
+        'widget': SettingsView(accent: Colors.teal),
+        'accent': Colors.teal,
       },
     ];
 

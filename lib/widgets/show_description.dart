@@ -80,7 +80,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
       children: (widget.details.genreList ?? [])
           .map(
             (x) => Chip(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               label: Text(
                 x,
               ),

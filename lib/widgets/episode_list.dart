@@ -19,7 +19,7 @@ class EpisodeList extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 48, 48, 48),
+                primary: Theme.of(context).primaryColor,
               ),
               onPressed: () {
                 Navigator.pushNamed(

@@ -9,7 +9,7 @@ class ErrorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SlantGradientBackgroundContainer(
-        colors: [Colors.red, Color.fromARGB(255, 238, 98, 88)],
+        colors: [Colors.red, Colors.red.withOpacity(0.7)],
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(

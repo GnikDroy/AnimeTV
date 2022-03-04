@@ -17,7 +17,6 @@ class CatalogueGroup extends StatelessWidget {
             alignment: Alignment.center,
             color: tabBarColor,
             child: TabBar(
-              indicatorColor: Colors.white,
               isScrollable: true,
               tabs: categories.map((x) => Tab(text: x.title)).toList(),
             ),
