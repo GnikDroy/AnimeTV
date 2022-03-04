@@ -56,7 +56,7 @@ String? _decode_episode_link(String b64, int num) {
 }
 
 Future<EpisodeDetails> get_episode_details(String url) async {
-  var details = EpisodeDetails();
+  var details = EpisodeDetails(url: url);
 
   final response = await http.get(Uri.parse(url));
   final document = parser.parse(response.body);
@@ -79,7 +79,7 @@ Future<EpisodeDetails> get_episode_details(String url) async {
 }
 
 Future<ShowDetails> get_show_details(String url) async {
-  var details = ShowDetails();
+  var details = ShowDetails(url: url);
 
   final response = await http.get(Uri.parse(server + url));
   if (response.statusCode == _statusOk) {

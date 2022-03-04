@@ -23,12 +23,16 @@ class _RecentState extends State<Recent> {
           setState(() {
             popular_list = anime_list;
             load_complete = true;
+            load_error = false;
           });
         }
       },
       onError: (err) {
         if (mounted) {
-          load_error = true;
+          setState(() {
+            load_error = true;
+            load_complete = false;
+          });
         }
       },
     );

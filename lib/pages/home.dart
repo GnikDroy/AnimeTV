@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'recent.dart';
-import 'catalogue.dart';
+import 'package:anime_tv/pages/show_detail_view.dart';
+import 'package:anime_tv/pages/recent.dart';
+import 'package:anime_tv/pages/catalogue.dart';
 import 'package:anime_tv/app_bar.dart';
 
 class Home extends StatefulWidget {
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
       {
         'label': 'Search',
         'icon': Icons.search,
-        'widget': Text('Search'),
+        'widget': const ShowDetailView(url: '/anime/blade-runner-black-lotus'),
         'accent': const Color.fromARGB(255, 136, 86, 223),
       },
       {
@@ -81,11 +82,12 @@ class _HomeState extends State<Home> {
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
               colors: [
-                Color.fromARGB(255, 16, 16, 16),
-                Color.fromARGB(255, 53, 53, 53),
+                Color.fromARGB(255, 18, 20, 36),
+                Color.fromARGB(255, 33, 36, 59),
+                // Color.fromARGB(255, 53, 53, 53),
               ]),
         ),
         child: IndexedStack(

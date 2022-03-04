@@ -31,7 +31,7 @@ AppBar get_app_bar(BuildContext context, Color color,
       ),
     ),
     elevation: 0,
-    backgroundColor: const Color(0x44000000),
+    backgroundColor: Color.fromARGB(255, 24, 24, 24),
     title: title,
   );
 }
