@@ -21,7 +21,12 @@ class _ShowDetailViewState extends State<ShowDetailView> {
 
   @override
   void initState() {
-    get_show_details(widget.url).then(
+    onRefresh();
+    super.initState();
+  }
+
+  Future<void> onRefresh() {
+    return get_show_details(widget.url).then(
       (details) {
         if (mounted) {
           setState(() {
@@ -40,7 +45,6 @@ class _ShowDetailViewState extends State<ShowDetailView> {
         }
       },
     );
-    super.initState();
   }
 
   @override
@@ -63,20 +67,25 @@ class _ShowDetailViewState extends State<ShowDetailView> {
       ),
     );
 
-    final stack = ListView(
-      children: [
-        cover,
-        ShowDescription(details: details),
-        EpisodeList(
-          details: details,
-          reorder: () {
-            setState(() {
-              details.episodeList = details.episodeList?.reversed.toList();
-            });
-          },
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: ListView(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
         ),
-      ],
+        children: [
+          cover,
+          ShowDescription(details: details),
+          EpisodeList(
+            details: details,
+            reorder: () {
+              setState(() {
+                details.episodeList = details.episodeList?.reversed.toList();
+              });
+            },
+          ),
+        ],
+      ),
     );
-    return stack;
   }
 }

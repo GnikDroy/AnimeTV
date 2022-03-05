@@ -17,14 +17,18 @@ class _FavoritesViewState extends State<FavoritesView> {
 
   @override
   void initState() {
-    getFavorites().then((value) {
+    onRefresh();
+    super.initState();
+  }
+
+  Future<void> onRefresh() {
+    return getFavorites().then((value) {
       if (mounted) {
         setState(() {
           favorites = value.map(ShowDetails.fromMap).toList();
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -51,16 +55,22 @@ class _FavoritesViewState extends State<FavoritesView> {
     }
 
     const double extent = 300;
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: extent,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: extent / (cardHeight),
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: GridView.builder(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: extent,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: extent / (cardHeight),
+        ),
+        itemBuilder: (_, index) => widgets[index],
+        itemCount: widgets.length,
       ),
-      itemBuilder: (_, index) => widgets[index],
-      itemCount: widgets.length,
     );
   }
 }

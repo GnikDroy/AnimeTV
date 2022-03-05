@@ -18,7 +18,12 @@ class _RecentEpisodeGridState extends State<RecentEpisodeGrid> {
 
   @override
   void initState() {
-    getRecentEpisodes().then(
+    onRefresh();
+    super.initState();
+  }
+
+  Future<void> onRefresh() {
+    return getRecentEpisodes().then(
       (list) {
         if (mounted) {
           setState(() {
@@ -37,7 +42,6 @@ class _RecentEpisodeGridState extends State<RecentEpisodeGrid> {
         }
       },
     );
-    super.initState();
   }
 
   @override
@@ -49,16 +53,20 @@ class _RecentEpisodeGridState extends State<RecentEpisodeGrid> {
     }
 
     const double extent = 300;
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: extent,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: extent / RecentEpisodeCard.height,
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: GridView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: extent,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: extent / RecentEpisodeCard.height,
+        ),
+        itemBuilder: (_, index) => RecentEpisodeCard(popularList[index]),
+        itemCount: popularList.length,
       ),
-      itemBuilder: (_, index) => RecentEpisodeCard(popularList[index]),
-      itemCount: popularList.length,
     );
   }
 }

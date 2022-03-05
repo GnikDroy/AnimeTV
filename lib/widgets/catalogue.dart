@@ -34,7 +34,12 @@ class _CatalogueState extends State<Catalogue>
 
   @override
   void initState() {
-    get_catalogue(widget._category.url).then((value) {
+    onRefresh();
+    super.initState();
+  }
+
+  Future<void> onRefresh() {
+    return get_catalogue(widget._category.url).then((value) {
       if (mounted) {
         setState(() {
           _catalogue = value;
@@ -52,7 +57,6 @@ class _CatalogueState extends State<Catalogue>
         });
       }
     });
-    super.initState();
   }
 
   Widget buildListItem(int index) {
@@ -124,11 +128,15 @@ class _CatalogueState extends State<Catalogue>
       ),
     );
 
-    final listView = ListView.separated(
-      padding: const EdgeInsets.all(5),
-      itemCount: _filteredItemsIndices.length,
-      itemBuilder: (context, index) => buildListItem(index),
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
+    final listView = RefreshIndicator(
+      onRefresh: onRefresh,
+      child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(5),
+        itemCount: _filteredItemsIndices.length,
+        itemBuilder: (context, index) => buildListItem(index),
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
+      ),
     );
 
     super.build(context);
