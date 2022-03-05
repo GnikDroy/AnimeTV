@@ -19,10 +19,12 @@ class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     if (!(ModalRoute.of(context)?.canPop ?? false)) {
       titleWidgets.add(
-        const Icon(
-          Icons.live_tv_outlined,
-          size: 35,
+        Image.asset(
+          'assets/icon.png',
+          fit: BoxFit.fitHeight,
+          height: 50,
         ),
+        // size: 35,
       );
       titleWidgets.add(const SizedBox(width: 15));
     }

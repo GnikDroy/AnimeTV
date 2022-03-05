@@ -52,6 +52,23 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+  flutter_app_name: ^0.1.0
+  flutter_launcher_icons: ^0.9.2
+  flutter_native_splash: ^2.0.5
+
+flutter_app_name:
+  name: 'Anime TV'
+
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: 'assets/icon.png'
+
+flutter_native_splash:
+  color: '#121212'
+  image: assets/icon.png
+
 
 # The following section is specific to Flutter.
 flutter:
@@ -69,6 +86,7 @@ flutter:
   assets:
     - assets/cover_placeholder.jpg
     - assets/poster.jpg
+    - assets/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
