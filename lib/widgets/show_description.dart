@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
-import 'package:anime_tv/utils.dart';
+import 'package:anime_tv/preferences.dart';
 
 class ShowDescription extends StatefulWidget {
   const ShowDescription({Key? key, required this.details}) : super(key: key);
@@ -15,7 +15,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
 
   @override
   void initState() {
-    isShowFavorite(widget.details.url).then((value) {
+    FavoriteShowPreferences.isPresent(widget.details.url).then((value) {
       if (mounted && value) {
         setState(() {
           _favorite = value;
@@ -35,9 +35,9 @@ class _ShowDescriptionState extends State<ShowDescription> {
     }
 
     if (_favorite) {
-      removeFavorite(widget.details).then(switchFavorite);
+      FavoriteShowPreferences.remove(widget.details).then(switchFavorite);
     } else {
-      addFavorite(widget.details).then(switchFavorite);
+      FavoriteShowPreferences.add(widget.details).then(switchFavorite);
     }
   }
 
@@ -53,7 +53,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
       ),
     );
 
-    final episodeText = (widget.details.episodeList ?? []).length == 0
+    final episodeText = (widget.details.episodeList ?? []).isEmpty
         ? ''
         : '${widget.details.episodeList?.length} Episodes';
 

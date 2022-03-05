@@ -1,6 +1,6 @@
 import 'package:anime_tv/api/models.dart';
 import 'package:anime_tv/routes.dart';
-import 'package:anime_tv/utils.dart';
+import 'package:anime_tv/preferences.dart';
 import 'package:anime_tv/widgets/image_card.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   }
 
   Future<void> onRefresh() {
-    return getFavorites().then((value) {
+    return FavoriteShowPreferences.get().then((value) {
       if (mounted) {
         setState(() {
           favorites = value.map(ShowDetails.fromMap).toList();

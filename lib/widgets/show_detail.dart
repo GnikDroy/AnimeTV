@@ -26,7 +26,7 @@ class _ShowDetailViewState extends State<ShowDetailView> {
   }
 
   Future<void> onRefresh() {
-    return get_show_details(widget.url).then(
+    return Api.getShowDetails(widget.url).then(
       (details) {
         if (mounted) {
           setState(() {

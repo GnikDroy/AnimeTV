@@ -27,7 +27,7 @@ class _SearchResultsViewState extends State<SearchResultsView> {
   }
 
   Future<void> onRefresh() {
-    return searchShow(widget.query).then((shows) {
+    return Api.searchShow(widget.query).then((shows) {
       if (mounted) {
         setState(() {
           searchResults = shows;

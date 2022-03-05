@@ -39,7 +39,7 @@ class _CatalogueState extends State<Catalogue>
   }
 
   Future<void> onRefresh() {
-    return get_catalogue(widget._category.url).then((value) {
+    return Api.getCatalogue(widget._category.url).then((value) {
       if (mounted) {
         setState(() {
           _catalogue = value;
@@ -78,7 +78,7 @@ class _CatalogueState extends State<Catalogue>
           Navigator.pushNamed(
             context,
             ViewEpisodeRoute.routeName,
-            arguments: server + detail.url!,
+            arguments: Api.server + detail.url!,
           );
         }
       },
@@ -97,7 +97,7 @@ class _CatalogueState extends State<Catalogue>
   void filterResults(String query) {
     query = query.toLowerCase();
     _filteredItemsIndices.clear();
-    final data = _catalogue.asMap().forEach((k, v) {
+    _catalogue.asMap().forEach((k, v) {
       if (v.title!.toLowerCase().contains(query)) {
         _filteredItemsIndices.add(k);
       }

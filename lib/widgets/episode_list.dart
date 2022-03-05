@@ -1,5 +1,5 @@
 import 'package:anime_tv/routes.dart';
-import 'package:anime_tv/utils.dart';
+import 'package:anime_tv/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
 
@@ -19,7 +19,7 @@ class _EpisodeListState extends State<EpisodeList> {
 
   @override
   void initState() {
-    getWatchedEpisodeUrls().then((watched) {
+    WatchedEpisodesPreferences.get().then((watched) {
       setState(() {
         watchedUrls = widget.details.episodeList
                 ?.where((details) => watched.contains(details.url))

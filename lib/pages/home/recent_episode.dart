@@ -23,7 +23,7 @@ class _RecentEpisodeGridState extends State<RecentEpisodeGrid> {
   }
 
   Future<void> onRefresh() {
-    return getRecentEpisodes().then(
+    return Api.getRecentEpisodes().then(
       (list) {
         if (mounted) {
           setState(() {

@@ -1,6 +1,5 @@
 import 'package:anime_tv/pages/home/favorites.dart';
 import 'package:anime_tv/pages/home/search.dart';
-import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/slant_gradient_container.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/pages/home/recent_episode.dart';
