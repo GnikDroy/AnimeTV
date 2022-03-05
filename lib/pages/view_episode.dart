@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:anime_tv/preferences.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 import 'package:anime_tv/widgets/error_card.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'dart:collection';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewEpisode extends StatefulWidget {
   final String url;
@@ -83,7 +86,14 @@ class _ViewEpisodeState extends State<ViewEpisode> {
         child: CircularProgressIndicator(),
       );
     } else {
-      body = getWebView();
+      if (Platform.isAndroid || Platform.isIOS) {
+        body = getWebView();
+      } else {
+        launch(details!.videoLink!);
+        body = const Center(
+          child: Text("Launching in a browser..."),
+        );
+      }
     }
 
     return Scaffold(
