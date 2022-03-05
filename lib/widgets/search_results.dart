@@ -4,7 +4,6 @@ import 'package:anime_tv/routes.dart';
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/widgets/image_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 
 class SearchResultsView extends StatefulWidget {
   final String query;
@@ -76,22 +75,34 @@ class _SearchResultsViewState extends State<SearchResultsView> {
     }
 
     const double extent = 300;
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: GridView.builder(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
+    final ret = Column(children: [
+      const SizedBox(height: 10),
+      Text(
+        "${widgets.length} results for '${widget.query}'",
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: extent,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: extent / (cardHeight),
-        ),
-        itemBuilder: (_, index) => widgets[index],
-        itemCount: widgets.length,
       ),
-    );
+      const SizedBox(height: 10),
+      Expanded(
+        child: GridView.builder(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: extent,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: extent / (cardHeight),
+          ),
+          itemBuilder: (_, index) => widgets[index],
+          itemCount: widgets.length,
+        ),
+      ),
+    ]);
+
+    return RefreshIndicator(onRefresh: onRefresh, child: ret);
   }
 }
