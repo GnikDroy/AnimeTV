@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/master/assets/icon.png">
+    <img src="https://raw.githubusercontent.com/GnikDroy/AnimeTV/master/assets/icon.png" style="height: 200px; width: 200px;">
 
 <h1 align="center">Anime TV!</h1>
     
