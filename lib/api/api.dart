@@ -5,9 +5,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:developer';
 import 'package:anime_tv/api/models.dart';
+import 'package:flutter/foundation.dart';
 
 class Api {
-  static const server = 'https://www.wcostream.com';
+  static const corsProxy =
+      kIsWeb ? 'https://api.codetabs.com/v1/proxy?quest=' : '';
+  static const server = corsProxy + 'https://www.wcostream.com';
+
   static const statusOk = 200;
 
   static String? _decodeVideoLink(String b64, int num) {

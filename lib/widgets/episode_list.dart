@@ -1,9 +1,11 @@
 import 'package:anime_tv/routes.dart';
-import 'package:anime_tv/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
+import 'package:provider/provider.dart';
+import 'package:anime_tv/models.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
-class EpisodeList extends StatefulWidget {
+class EpisodeList extends StatelessWidget {
   final ShowDetails details;
   final void Function() reorder;
 
@@ -11,60 +13,47 @@ class EpisodeList extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<EpisodeList> createState() => _EpisodeListState();
-}
-
-class _EpisodeListState extends State<EpisodeList> {
-  var watchedUrls = <String>[];
-
-  @override
-  void initState() {
-    WatchedEpisodesPreferences.get().then((watched) {
-      setState(() {
-        watchedUrls = widget.details.episodeList
-                ?.where((details) => watched.contains(details.url))
-                .map((details) => details.url!)
-                .toList() ??
-            [];
-      });
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final episodeList = (widget.details.episodeList ?? []).map(
+    final episodeList = (details.episodeList ?? []).map(
       (ep) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  ViewEpisodeRoute.routeName,
-                  arguments: ep.url!,
-                );
-              },
-              icon: Icon(Icons.play_circle,
-                  color: watchedUrls.contains(ep.url)
-                      ? Colors.grey
-                      : Colors.white),
-              label: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Text(
-                  ep.title ?? '',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+        return Consumer<WatchedEpisodes>(
+            builder: (context, watchedUrls, child) {
+          return PreferenceBuilder(
+            preference: watchedUrls.preference,
+            builder: (BuildContext context, List<String> _) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        ViewEpisodeRoute.routeName,
+                        arguments: ep.url!,
+                      );
+                    },
+                    icon: Icon(Icons.play_circle,
+                        color: watchedUrls.isPresent(ep.url ?? '')
+                            ? Colors.grey
+                            : Colors.white),
+                    label: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Text(
+                        ep.title ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        );
+              );
+            },
+          );
+        });
       },
     ).toList();
 
@@ -75,7 +64,7 @@ class _EpisodeListState extends State<EpisodeList> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              onPressed: widget.reorder,
+              onPressed: reorder,
               icon: const Icon(Icons.sort_by_alpha),
             ),
           ),

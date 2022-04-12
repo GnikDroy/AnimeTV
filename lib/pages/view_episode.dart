@@ -1,14 +1,16 @@
 import 'dart:io' show Platform;
 
-import 'package:anime_tv/preferences.dart';
+import 'package:anime_tv/models.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 import 'package:anime_tv/widgets/error_card.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'dart:collection';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
 class ViewEpisode extends StatefulWidget {
   final String url;
@@ -25,13 +27,14 @@ class _ViewEpisodeState extends State<ViewEpisode> {
 
   @override
   void initState() {
+    Provider.of<WatchedEpisodes>(context, listen: false).add(widget.url);
+
     Api.getEpisodeDetails(widget.url).then(
       (details) {
         if (mounted) {
           setState(() {
             if (details.videoLink != null) {
               this.details = details;
-              WatchedEpisodesPreferences.add(widget.url);
             } else {
               loadError = true;
             }
@@ -86,10 +89,10 @@ class _ViewEpisodeState extends State<ViewEpisode> {
         child: CircularProgressIndicator(),
       );
     } else {
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
         body = getWebView();
       } else {
-        launch(details!.videoLink!);
+        launch(Api.corsProxy + details!.videoLink!);
         body = const Center(
           child: Text("Launching in a browser..."),
         );

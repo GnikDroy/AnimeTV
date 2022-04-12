@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:anime_tv/pages/home.dart';
 import 'package:anime_tv/routes.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'models.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
-  runApp(const AnimeTV());
+  final prefs = await StreamingSharedPreferences.instance;
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => WatchedEpisodes(prefs)),
+        ChangeNotifierProvider(create: (context) => FavoriteShows(prefs)),
+      ],
+      child: const AnimeTV(),
+    ),
+  );
 }
 
 class AnimeTV extends StatelessWidget {

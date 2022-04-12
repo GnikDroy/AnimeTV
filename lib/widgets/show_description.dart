@@ -1,6 +1,8 @@
+import 'package:anime_tv/models.dart';
 import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
-import 'package:anime_tv/preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class ShowDescription extends StatefulWidget {
   const ShowDescription({Key? key, required this.details}) : super(key: key);
@@ -11,34 +13,9 @@ class ShowDescription extends StatefulWidget {
 }
 
 class _ShowDescriptionState extends State<ShowDescription> {
-  bool _favorite = false;
-
   @override
   void initState() {
-    FavoriteShowPreferences.isPresent(widget.details.url).then((value) {
-      if (mounted && value) {
-        setState(() {
-          _favorite = value;
-        });
-      }
-    });
     super.initState();
-  }
-
-  void toggleFavorite() {
-    void switchFavorite(_) {
-      if (mounted) {
-        setState(() {
-          _favorite = !_favorite;
-        });
-      }
-    }
-
-    if (_favorite) {
-      FavoriteShowPreferences.remove(widget.details).then(switchFavorite);
-    } else {
-      FavoriteShowPreferences.add(widget.details).then(switchFavorite);
-    }
   }
 
   @override
@@ -67,10 +44,25 @@ class _ShowDescriptionState extends State<ShowDescription> {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        IconButton(
-          onPressed: () => toggleFavorite(),
-          icon: Icon(Icons.star, color: _favorite ? Colors.amber : null),
-        ),
+        Consumer<FavoriteShows>(builder: (context, favoriteShows, child) {
+          return PreferenceBuilder(
+              preference: favoriteShows.preference,
+              builder: (BuildContext context, String _) {
+                final shows =
+                    favoriteShows.get().map(ShowDetails.fromMap).toList();
+                return IconButton(
+                  onPressed: () => favoriteShows.toggle(widget.details),
+                  icon: Icon(Icons.star,
+                      color: favoriteShows.isPresent(widget.details.url)
+                          ? Colors.amber
+                          : null),
+                );
+              });
+        }),
+        // IconButton(
+        //   onPressed: () => {},
+        //   icon: Icon(Icons.star, color: true ? Colors.amber : null),
+        // ),
       ],
     );
 

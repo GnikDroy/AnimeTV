@@ -5,7 +5,7 @@
     
 <h3 align="center"> Watch your favorite anime on your device </h3>
 
-Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Supports all platforms supported by flutter except for web (impossible due to CORS) i.e Android, IOS, macOS, Linux and Windows. Officially tested in Android and Windows but should work in all platforms.
+Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Should support all platforms supported by flutter. Officially tested in Android but should work in all platforms.
 
 It has a low memory footprint, stores all information on your device and works off the ~~[Anime1](http://www.anime1.com/)~~ [Wcostream](https://www.wcostream.com/) server. The app scrapes the site and provides a pleasant
 anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
@@ -20,7 +20,7 @@ Currently, this app is not available in the app store but you can build your apk
  
  ![screenshot](https://i.postimg.cc/k51wJd5z/flutter-05.jpg)
 
-<!-- [url=https://postimg.cc/Sjf7HB5Z][img]https://i.postimg.cc/Sjf7HB5Z/flutter-01.jpg[/img][/url]
+[url=https://postimg.cc/Sjf7HB5Z][img]https://i.postimg.cc/Sjf7HB5Z/flutter-01.jpg[/img][/url]
 
 [url=https://postimg.cc/PP6b5mdY][img]https://i.postimg.cc/PP6b5mdY/flutter-02.jpg[/img][/url]
 
@@ -28,7 +28,7 @@ Currently, this app is not available in the app store but you can build your apk
 
 [url=https://postimg.cc/sMvYQv28][img]https://i.postimg.cc/sMvYQv28/flutter-04.jpg[/img][/url]
 
-[url=https://postimg.cc/4KcpPqVQ][img]https://i.postimg.cc/4KcpPqVQ/flutter-05.jpg[/img][/url] -->
+[url=https://postimg.cc/4KcpPqVQ][img]https://i.postimg.cc/4KcpPqVQ/flutter-05.jpg[/img][/url]
 
 ## Setting up
 
@@ -55,7 +55,7 @@ flutter build
 flutter test
 ```
 
-Currently, only the scraper has unit tests. If you would like to write the tests for, start an issue. Please make sure the tests are meaningful! I do not want to over-engineer a volatile app (I obviously don't own the server).
+Currently, only the scraper has unit tests. If you would like to write the tests, start an issue. Please make sure the tests are meaningful! I do not want to over-engineer a volatile app (I obviously don't own the server).
 
 ## Contributing
 
@@ -76,4 +76,4 @@ samples, guidance on mobile development, and a full API reference.
 
 Gnik - gnikdroy@gmail.com
 
-Distributed under a MIT license. See ``LICENSE`` for more information.
+Distributed under a MIT license. See ``LICENSE`` for more information. Please use this app responsibly. There is no planned release simply due to the nature of the application.

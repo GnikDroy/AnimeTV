@@ -4,14 +4,14 @@ import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:anime_tv/widgets/recent_episode_card.dart';
 
-class RecentEpisodeGrid extends StatefulWidget {
-  const RecentEpisodeGrid({Key? key}) : super(key: key);
+class RecentEpisodesGrid extends StatefulWidget {
+  const RecentEpisodesGrid({Key? key}) : super(key: key);
 
   @override
-  _RecentEpisodeGridState createState() => _RecentEpisodeGridState();
+  _RecentEpisodesGridState createState() => _RecentEpisodesGridState();
 }
 
-class _RecentEpisodeGridState extends State<RecentEpisodeGrid> {
+class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
   var popularList = <RecentEpisode>[];
   bool loadComplete = false;
   bool loadError = false;
