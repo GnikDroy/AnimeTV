@@ -4,33 +4,33 @@ class Category {
   const Category(this.title, this.url);
 }
 
-class ShowDetails {
-  String? title;
-  String? url;
-  String? image;
-  String? description;
-  List<EpisodeDetails>? episodeList;
-  List<String>? genreList;
+class Show {
+  String title;
+  String url;
+  String image;
+  String description;
+  List<Episode> episodeList;
+  List<String> genreList;
 
-  ShowDetails({
-    this.title,
-    this.url,
-    this.image,
-    this.description,
-    this.episodeList,
-    this.genreList,
+  Show({
+    this.title = '',
+    this.url = '',
+    this.image = '',
+    this.description = '',
+    this.episodeList = const [],
+    this.genreList = const [],
   });
 
-  static ShowDetails fromMap(Map<String, String?> show) {
-    return ShowDetails(
-      title: show["title"],
-      description: show['description'],
-      image: show['image'],
-      url: show['url'],
+  static Show fromMap(Map<String, String> show) {
+    return Show(
+      title: show["title"] ?? '',
+      description: show['description'] ?? '',
+      image: show['image'] ?? '',
+      url: show['url'] ?? '',
     );
   }
 
-  Map<String, String?> toMap() {
+  Map<String, String> toMap() {
     return {
       'title': title,
       'description': description,
@@ -40,56 +40,60 @@ class ShowDetails {
   }
 }
 
-class StreamUrls {
-  final List<String> sd = [];
-  final List<String> hd = [];
+class VideoSource {
+  List<String> sd;
+  List<String> hd;
+  VideoSource({hd, sd})
+      : hd = hd ?? [],
+        sd = sd ?? [];
 }
 
-class EpisodeDetails {
-  String? url;
-  String? title;
-  StreamUrls streamUrls;
+class Episode {
+  String url;
+  String title;
+  VideoSource videoSource = VideoSource();
 
-  bool hasStreams() {
-    return streamUrls.hd.isNotEmpty || streamUrls.sd.isNotEmpty;
+  bool hasVideoSource() {
+    return videoSource.hd.isNotEmpty || videoSource.sd.isNotEmpty;
   }
 
-  Map<String, String> getResolutions() {
+  Map<String, String> getVideoResolutions() {
     var ret = <String, String>{};
-    for (int i = 0; i < streamUrls.hd.length; i++) {
+    for (int i = 0; i < videoSource.hd.length; i++) {
       if (i == 0) {
-        ret['720p'] = streamUrls.hd[i];
+        ret['1080p'] = videoSource.hd[i];
       } else {
-        ret['720p_${i}'] = streamUrls.hd[i];
+        ret['1080p_$i'] = videoSource.hd[i];
       }
     }
-    for (int i = 0; i < streamUrls.sd.length; i++) {
+    for (int i = 0; i < videoSource.sd.length; i++) {
       if (i == 0) {
-        ret['360p'] = streamUrls.sd[i];
+        ret['480p'] = videoSource.sd[i];
       } else {
-        ret['360p_${i}'] = streamUrls.sd[i];
+        ret['480p_$i'] = videoSource.sd[i];
       }
     }
     return ret;
   }
 
-  String? getAnyStream() {
-    if (streamUrls.hd.isNotEmpty) {
-      return streamUrls.hd.first;
+  String getSingleVideoSource() {
+    if (videoSource.hd.isNotEmpty) {
+      return videoSource.hd.first;
     }
-    if (streamUrls.sd.isNotEmpty) {
-      return streamUrls.sd.first;
+    if (videoSource.sd.isNotEmpty) {
+      return videoSource.sd.first;
     }
-    return null;
+    return '';
   }
 
-  EpisodeDetails({this.url, this.title, required this.streamUrls});
+  Episode({this.url = '', this.title = ''});
 }
 
 class RecentEpisode {
-  String? image;
-  EpisodeDetails episode;
-  RecentEpisode({this.image, required this.episode});
+  String url;
+  String title;
+  String cover;
+  RecentEpisode({required this.url, required this.title, required this.cover});
 }
 
 const categories = <Category>[

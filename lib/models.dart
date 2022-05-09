@@ -43,33 +43,33 @@ class FavoriteShows extends ChangeNotifier {
   FavoriteShows(StreamingSharedPreferences prefs)
       : preference = prefs.getString(FavoriteShows.key, defaultValue: "[]");
 
-  List<Map<String, String?>> get() {
+  List<Map<String, String>> get() {
     final favoriteShowsStr = preference.getValue();
     var favoriteShowsDyn = <dynamic>[];
     favoriteShowsDyn = jsonDecode(favoriteShowsStr);
     final favoriteShows =
-        favoriteShowsDyn.map((e) => Map<String, String?>.from(e)).toList();
+        favoriteShowsDyn.map((e) => Map<String, String>.from(e)).toList();
     return favoriteShows;
   }
 
-  void set(List<Map<String, String?>> favorites) {
+  void set(List<Map<String, String>> favorites) {
     preference.setValue(json.encode(favorites));
     notifyListeners();
   }
 
-  bool isPresent(String? url) {
+  bool isPresent(String url) {
     final favoriteShowsStr = preference.getValue();
     List<dynamic> favoriteShows = jsonDecode(favoriteShowsStr);
     for (final dynShow in favoriteShows) {
       Map<String, String> show = Map<String, String>.from(dynShow);
-      if (ShowDetails.fromMap(show).url == url) {
+      if (Show.fromMap(show).url == url) {
         return true;
       }
     }
     return false;
   }
 
-  void toggle(ShowDetails details) {
+  void toggle(Show details) {
     final present = isPresent(details.url);
     if (!present) {
       add(details);
@@ -78,7 +78,7 @@ class FavoriteShows extends ChangeNotifier {
     }
   }
 
-  add(ShowDetails details) {
+  add(Show details) {
     final present = isPresent(details.url);
     if (!present) {
       final favoriteShows = get();
@@ -87,7 +87,7 @@ class FavoriteShows extends ChangeNotifier {
     }
   }
 
-  remove(ShowDetails details) {
+  remove(Show details) {
     final present = isPresent(details.url);
     if (present) {
       final favoriteShows = get();

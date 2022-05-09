@@ -6,7 +6,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class ShowDescription extends StatefulWidget {
   const ShowDescription({Key? key, required this.details}) : super(key: key);
-  final ShowDetails details;
+  final Show details;
 
   @override
   State<ShowDescription> createState() => _ShowDescriptionState();
@@ -21,7 +21,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
   @override
   Widget build(BuildContext context) {
     final title = Text(
-      widget.details.title ?? '',
+      widget.details.title,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: const TextStyle(
@@ -30,9 +30,9 @@ class _ShowDescriptionState extends State<ShowDescription> {
       ),
     );
 
-    final episodeText = (widget.details.episodeList ?? []).isEmpty
+    final episodeText = widget.details.episodeList.isEmpty
         ? ''
-        : '${widget.details.episodeList?.length} Episodes';
+        : '${widget.details.episodeList.length} Episodes';
 
     final controls = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,8 +48,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
           return PreferenceBuilder(
               preference: favoriteShows.preference,
               builder: (BuildContext context, String _) {
-                final shows =
-                    favoriteShows.get().map(ShowDetails.fromMap).toList();
+                final shows = favoriteShows.get().map(Show.fromMap).toList();
                 return IconButton(
                   onPressed: () => favoriteShows.toggle(widget.details),
                   icon: Icon(Icons.star,
@@ -69,7 +68,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
     final genreTags = Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: (widget.details.genreList ?? [])
+      children: widget.details.genreList
           .map(
             (x) => Chip(
               backgroundColor: Theme.of(context).colorScheme.primary,
@@ -82,7 +81,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
     );
 
     final plot = Text(
-      widget.details.description ?? '',
+      widget.details.description,
       style: const TextStyle(fontSize: 16, height: 1.4),
     );
 

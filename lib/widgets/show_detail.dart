@@ -15,9 +15,14 @@ class ShowDetailView extends StatefulWidget {
 }
 
 class _ShowDetailViewState extends State<ShowDetailView> {
-  var details = ShowDetails();
+  var details = Show();
   bool loadComplete = false;
   bool loadError = false;
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
 
   @override
   void initState() {
@@ -28,21 +33,17 @@ class _ShowDetailViewState extends State<ShowDetailView> {
   Future<void> onRefresh() {
     return Api.getShowDetails(widget.url).then(
       (details) {
-        if (mounted) {
-          setState(() {
-            this.details = details;
-            loadComplete = true;
-            loadError = false;
-          });
-        }
+        setState(() {
+          this.details = details;
+          loadComplete = true;
+          loadError = false;
+        });
       },
       onError: (err) {
-        if (mounted) {
-          setState(() {
-            loadError = true;
-            loadComplete = false;
-          });
-        }
+        setState(() {
+          loadError = true;
+          loadComplete = false;
+        });
       },
     );
   }
@@ -59,9 +60,9 @@ class _ShowDetailViewState extends State<ShowDetailView> {
       height: MediaQuery.of(context).size.height / 2.0,
       width: double.infinity,
       child: FadeInImage(
-        image: (details.image == null
+        image: (details.image.isEmpty
             ? const AssetImage('assets/cover_placeholder.jpg')
-            : NetworkImage('https:' + details.image!)) as ImageProvider,
+            : NetworkImage('https:' + details.image)) as ImageProvider,
         placeholder: const AssetImage('assets/cover_placeholder.jpg'),
         fit: BoxFit.cover,
       ),
@@ -80,7 +81,7 @@ class _ShowDetailViewState extends State<ShowDetailView> {
             details: details,
             reorder: () {
               setState(() {
-                details.episodeList = details.episodeList?.reversed.toList();
+                details.episodeList = details.episodeList.reversed.toList();
               });
             },
           ),

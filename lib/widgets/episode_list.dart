@@ -6,7 +6,7 @@ import 'package:anime_tv/models.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class EpisodeList extends StatelessWidget {
-  final ShowDetails details;
+  final Show details;
   final void Function() reorder;
 
   const EpisodeList({Key? key, required this.details, required this.reorder})
@@ -14,7 +14,7 @@ class EpisodeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final episodeList = (details.episodeList ?? []).map(
+    final episodeList = details.episodeList.map(
       (ep) {
         return Consumer<WatchedEpisodes>(
             builder: (context, watchedUrls, child) {
@@ -33,17 +33,17 @@ class EpisodeList extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         ViewEpisodeRoute.routeName,
-                        arguments: ep.url!,
+                        arguments: ep.url,
                       );
                     },
                     icon: Icon(Icons.play_circle,
-                        color: watchedUrls.isPresent(ep.url ?? '')
+                        color: watchedUrls.isPresent(ep.url)
                             ? Colors.grey
                             : Colors.white),
                     label: Padding(
                       padding: const EdgeInsets.all(18),
                       child: Text(
-                        ep.title ?? '',
+                        ep.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

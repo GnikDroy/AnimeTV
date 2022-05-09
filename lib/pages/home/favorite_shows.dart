@@ -13,24 +13,24 @@ class FavoriteShowsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<FavoriteShows>(builder: (context, favoriteShows, child) {
       var widgets = <Widget>[];
-      final favorites = favoriteShows.get().map(ShowDetails.fromMap).toList();
+      final favorites = favoriteShows.get().map(Show.fromMap).toList();
 
       for (final details in favorites) {
-        final image = (details.image == null
+        final image = (details.image.isEmpty
             ? const AssetImage('assets/cover_placeholder.jpg')
-            : NetworkImage('https:' + details.image!)) as ImageProvider;
+            : NetworkImage('https:' + details.image)) as ImageProvider;
 
-        final title = details.title ?? '';
         widgets.add(
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(
                 context,
                 ShowDetailRoute.routeName,
-                arguments: details.url!,
+                arguments: details.url,
               );
             },
-            child: ImageCard(title: title, image: image, height: cardHeight),
+            child: ImageCard(
+                title: details.title, image: image, height: cardHeight),
           ),
         );
       }

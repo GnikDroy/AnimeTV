@@ -21,7 +21,7 @@ class Catalogue extends StatefulWidget {
 
 class _CatalogueState extends State<Catalogue>
     with AutomaticKeepAliveClientMixin<Catalogue> {
-  var _catalogue = <ShowDetails>[];
+  var _catalogue = <Show>[];
   var _filteredItemsIndices = <int>[];
 
   TextEditingController searchController = TextEditingController();
@@ -33,6 +33,11 @@ class _CatalogueState extends State<Catalogue>
   bool get wantKeepAlive => true;
 
   @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
+
+  @override
   void initState() {
     onRefresh();
     super.initState();
@@ -40,22 +45,17 @@ class _CatalogueState extends State<Catalogue>
 
   Future<void> onRefresh() {
     return Api.getCatalogue(widget._category.url).then((value) {
-      if (mounted) {
-        setState(() {
-          _catalogue = value;
-          _filteredItemsIndices =
-              List<int>.generate(_catalogue.length, (i) => i);
-          loadComplete = true;
-          loadError = false;
-        });
-      }
+      setState(() {
+        _catalogue = value;
+        _filteredItemsIndices = List<int>.generate(_catalogue.length, (i) => i);
+        loadComplete = true;
+        loadError = false;
+      });
     }, onError: (err) {
-      if (mounted) {
-        setState(() {
-          loadError = true;
-          loadComplete = false;
-        });
-      }
+      setState(() {
+        loadError = true;
+        loadComplete = false;
+      });
     });
   }
 
@@ -67,25 +67,25 @@ class _CatalogueState extends State<Catalogue>
       onPressed: () {
         final detail = _catalogue[_filteredItemsIndices[index]];
         if (widget._hasEpisodes) {
-          if (detail.url != null) {
+          if (detail.url.isNotEmpty) {
             Navigator.pushNamed(
               context,
               ShowDetailRoute.routeName,
-              arguments: detail.url!,
+              arguments: detail.url,
             );
           }
         } else {
           Navigator.pushNamed(
             context,
             ViewEpisodeRoute.routeName,
-            arguments: Api.server + detail.url!,
+            arguments: Api.server + detail.url,
           );
         }
       },
       child: Container(
         padding: const EdgeInsets.all(15),
         child: Text(
-          _catalogue[_filteredItemsIndices[index]].title!,
+          _catalogue[_filteredItemsIndices[index]].title,
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -98,7 +98,7 @@ class _CatalogueState extends State<Catalogue>
     query = query.toLowerCase();
     _filteredItemsIndices.clear();
     _catalogue.asMap().forEach((k, v) {
-      if (v.title!.toLowerCase().contains(query)) {
+      if (v.title.toLowerCase().contains(query)) {
         _filteredItemsIndices.add(k);
       }
     });

@@ -14,10 +14,15 @@ class SearchResultsView extends StatefulWidget {
 }
 
 class _SearchResultsViewState extends State<SearchResultsView> {
-  var searchResults = <ShowDetails>[];
+  var searchResults = <Show>[];
   static const double cardHeight = 400;
   bool loadComplete = false;
   bool loadError = false;
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
 
   @override
   void initState() {
@@ -28,20 +33,16 @@ class _SearchResultsViewState extends State<SearchResultsView> {
 
   Future<void> onRefresh() {
     return Api.searchShow(widget.query).then((shows) {
-      if (mounted) {
-        setState(() {
-          searchResults = shows;
-          loadComplete = true;
-          loadError = false;
-        });
-      }
+      setState(() {
+        searchResults = shows;
+        loadComplete = true;
+        loadError = false;
+      });
     }, onError: (err) {
-      if (mounted) {
-        setState(() {
-          loadComplete = false;
-          loadError = true;
-        });
-      }
+      setState(() {
+        loadComplete = false;
+        loadError = true;
+      });
     });
   }
 
@@ -55,21 +56,21 @@ class _SearchResultsViewState extends State<SearchResultsView> {
 
     var widgets = <Widget>[];
     for (final details in searchResults) {
-      final image = (details.image == null
+      final image = (details.image.isEmpty
           ? const AssetImage('assets/cover_placeholder.jpg')
-          : NetworkImage(details.image!)) as ImageProvider;
+          : NetworkImage(details.image)) as ImageProvider;
 
-      final title = details.title ?? '';
       widgets.add(
         GestureDetector(
           onTap: () {
             Navigator.pushNamed(
               context,
               ShowDetailRoute.routeName,
-              arguments: details.url!,
+              arguments: details.url,
             );
           },
-          child: ImageCard(title: title, image: image, height: cardHeight),
+          child:
+              ImageCard(title: details.title, image: image, height: cardHeight),
         ),
       );
     }

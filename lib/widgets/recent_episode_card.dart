@@ -11,22 +11,20 @@ class RecentEpisodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = (details.image == null
+    final image = (details.cover.isEmpty
         ? const AssetImage('assets/cover_placeholder.jpg')
-        : NetworkImage('https:' + details.image!)) as ImageProvider;
-
-    final title = details.episode.title ?? '';
+        : NetworkImage('https:' + details.cover)) as ImageProvider;
 
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
           context,
           ViewEpisodeRoute.routeName,
-          arguments: details.episode.url!,
+          arguments: details.url,
         );
       },
       child: ImageCard(
-        title: title,
+        title: details.title,
         image: image,
       ),
     );
