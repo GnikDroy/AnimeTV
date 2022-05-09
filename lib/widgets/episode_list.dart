@@ -20,7 +20,7 @@ class EpisodeList extends StatelessWidget {
             builder: (context, watchedUrls, child) {
           return PreferenceBuilder(
             preference: watchedUrls.preference,
-            builder: (BuildContext context, List<String> _) {
+            builder: (BuildContext context, _) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: SizedBox(

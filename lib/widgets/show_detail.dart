@@ -46,9 +46,8 @@ class _ShowDetailViewState extends State<ShowDetailView> {
             width: double.infinity,
             child: FadeInImage(
               image: (snapshot.data!.image.isEmpty
-                      ? const AssetImage('assets/cover_placeholder.jpg')
-                      : NetworkImage('https:' + snapshot.data!.image))
-                  as ImageProvider,
+                  ? const AssetImage('assets/cover_placeholder.jpg')
+                  : NetworkImage(snapshot.data!.image)) as ImageProvider,
               placeholder: const AssetImage('assets/cover_placeholder.jpg'),
               fit: BoxFit.cover,
             ),

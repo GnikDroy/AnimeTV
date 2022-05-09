@@ -61,14 +61,14 @@ class _HomeState extends State<Home> {
         label: 'Recent',
         icon: Icons.movie,
         widget: RecentEpisodesGrid(),
-        accent: Colors.red,
+        accent: Color.fromARGB(255, 191, 63, 54),
       ),
       HomeSubPage(
         label: 'Catalogue',
         icon: Icons.video_collection,
-        accent: Color.fromARGB(255, 33, 117, 243),
+        accent: Color.fromARGB(255, 20, 148, 131),
         widget: CatalogueGroup(
-          tabBarColor: Color.fromARGB(255, 33, 117, 243),
+          tabBarColor: Color.fromARGB(255, 20, 148, 131),
         ),
       ),
       HomeSubPage(
@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
         label: 'Favorites',
         icon: Icons.star,
         widget: FavoriteShowsView(),
-        accent: Color.fromARGB(255, 253, 164, 0),
+        accent: Color.fromARGB(255, 206, 137, 9),
       ),
     ];
 

@@ -104,6 +104,7 @@ class Api {
               .querySelector('div#cat-img-desc>div>img')
               ?.attributes['src'] ??
           '';
+      details.image = details.image == '' ? '' : 'https:${details.image}';
 
       details.description =
           document.querySelector('div#cat-img-desc>.iltext')?.text.trim() ?? '';
@@ -177,7 +178,7 @@ class Api {
     final response = await http.get(Uri.parse(server));
     if (response.statusCode == statusOk) {
       final document = parser.parse(response.body);
-      var recentEpisode = document
+      var recentEpisodes = document
           .querySelectorAll('ul.items>li')
           .map(
             (e) => RecentEpisode(
@@ -189,7 +190,10 @@ class Api {
           )
           .where((e) => e.url.isNotEmpty && e.cover.isNotEmpty)
           .toList();
-      return recentEpisode;
+      recentEpisodes.forEach((e) {
+        e.cover = 'https:${e.cover}';
+      });
+      return recentEpisodes;
     } else {
       log('Error: Fetch request returned status code ${response.statusCode}');
     }

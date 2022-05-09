@@ -13,7 +13,7 @@ class RecentEpisodeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final image = (details.cover.isEmpty
         ? const AssetImage('assets/cover_placeholder.jpg')
-        : NetworkImage('https:' + details.cover)) as ImageProvider;
+        : NetworkImage(details.cover)) as ImageProvider;
 
     return GestureDetector(
       onTap: () {

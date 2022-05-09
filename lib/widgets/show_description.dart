@@ -48,7 +48,6 @@ class _ShowDescriptionState extends State<ShowDescription> {
           return PreferenceBuilder(
               preference: favoriteShows.preference,
               builder: (BuildContext context, String _) {
-                final shows = favoriteShows.get().map(Show.fromMap).toList();
                 return IconButton(
                   onPressed: () => favoriteShows.toggle(widget.details),
                   icon: Icon(Icons.star,
