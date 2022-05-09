@@ -3,14 +3,12 @@ import 'dart:io' show Platform;
 import 'package:anime_tv/models.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 import 'package:anime_tv/widgets/error_card.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'dart:collection';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
+import 'package:better_player/better_player.dart';
+import 'package:flutter/services.dart';
 
 class ViewEpisode extends StatefulWidget {
   final String url;
@@ -21,20 +19,36 @@ class ViewEpisode extends StatefulWidget {
 }
 
 class _ViewEpisodeState extends State<ViewEpisode> {
-  InAppWebViewController? webViewController;
   EpisodeDetails? details;
+  late BetterPlayerController _betterPlayerController;
+  late BetterPlayerDataSource _betterPlayerDataSource;
   bool loadError = false;
 
   @override
   void initState() {
+    const betterPlayerConfiguration = BetterPlayerConfiguration(
+      aspectRatio: 9 / 16,
+      fit: BoxFit.contain,
+      autoPlay: true,
+      fullScreenByDefault: true,
+      autoDetectFullscreenDeviceOrientation: true,
+    );
+    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+
     Provider.of<WatchedEpisodes>(context, listen: false).add(widget.url);
 
     Api.getEpisodeDetails(widget.url).then(
       (details) {
         if (mounted) {
           setState(() {
-            if (details.videoLink != null) {
+            if (details.hasStreams()) {
               this.details = details;
+              _betterPlayerDataSource = BetterPlayerDataSource(
+                BetterPlayerDataSourceType.network,
+                details.getAnyStream()!,
+                resolutions: details.getResolutions(),
+              );
+              _betterPlayerController.setupDataSource(_betterPlayerDataSource);
             } else {
               loadError = true;
             }
@@ -52,53 +66,20 @@ class _ViewEpisodeState extends State<ViewEpisode> {
     super.initState();
   }
 
-  Widget getWebView() {
-    const userAgent =
-        "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
-    const qolScriptSrc = '''
-        vp.poster(null);
-        document.querySelector('div#d-player>p').remove();
-        document.querySelector('div.container').classList.add('container-fluid');
-        document.querySelector('div.container').classList.remove('container');
-    ''';
-    final qolImprovementScript = UserScript(
-        source: qolScriptSrc,
-        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_END);
-    final webview = InAppWebView(
-      initialUrlRequest: URLRequest(url: Uri.parse(details!.videoLink!)),
-      initialOptions: InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(userAgent: userAgent),
-      ),
-      initialUserScripts: UnmodifiableListView([qolImprovementScript]),
-      onWebViewCreated: (controller) {
-        webViewController = controller;
-      },
-    );
-
-    return webview;
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget? body;
 
     if (loadError) {
       body = genericNetworkError;
-    } else if (details == null) {
-      body = const Center(
-        child: CircularProgressIndicator(),
-      );
     } else {
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        body = getWebView();
-      } else {
-        launch(Api.corsProxy + details!.videoLink!);
-        body = const Center(
-          child: Text("Launching in a browser..."),
-        );
-      }
+      body = LayoutBuilder(
+        builder: (context, constraints) => AspectRatio(
+          aspectRatio: constraints.maxWidth / constraints.maxHeight,
+          child: BetterPlayer(controller: _betterPlayerController),
+        ),
+      );
     }
-
     return Scaffold(
       appBar: const AnimeTVAppBar(),
       body: body,

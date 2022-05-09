@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,11 +19,22 @@ void main() {
     expect(episodes[0].image != null && episodes[0].image!.isNotEmpty, true);
   });
 
-  test('Fetch video link', () async {
+  test('Get StreamURLs', () async {
+    const videoLink =
+        "https://www.wcostream.com/inc/animeuploads/embed.php?file=Bleach%20English%20Subbed%2FMovies%2FBleach%20Movie%2003%20-%20Fade%20to%20Black.flv&pid=208947&h=9b49a727785aee25c867dd9831dee73d&t=1652033942";
+    final json_url = await Api.getJsonApiLink(videoLink);
+    expect(json_url != null, true);
+    final streamUrls = await Api.getStreamUrls(json_url!);
+    expect(streamUrls.sd.isNotEmpty || streamUrls.hd.isNotEmpty, true);
+  });
+
+  test('Get Episode Details', () async {
     final results = await Api.getEpisodeDetails(
         'https://www.wcostream.com/bleach-movie-3-fade-to-black-english-subbed');
+    expect(results.title != null && results.title!.isNotEmpty, true);
     expect(results.url != null && results.url!.isNotEmpty, true);
-    expect(results.videoLink != null && results.videoLink!.isNotEmpty, true);
+    expect(results.streamUrls.sd.isNotEmpty || results.streamUrls.hd.isNotEmpty,
+        true);
   });
 
   test('Fetch catalogue and show details', () async {

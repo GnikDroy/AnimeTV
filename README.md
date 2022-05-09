@@ -5,7 +5,7 @@
     
 <h3 align="center"> Watch your favorite anime on your device </h3>
 
-Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Should support all platforms supported by flutter. Officially tested in Android but should work in all platforms.
+Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Supports Android and iOS supported by flutter. Officially tested in Android.
 
 It has a low memory footprint, stores all information on your device and works off the ~~[Anime1](http://www.anime1.com/)~~ [Wcostream](https://www.wcostream.com/) server. The app scrapes the site and provides a pleasant
 anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.

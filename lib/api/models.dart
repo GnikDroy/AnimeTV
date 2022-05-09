@@ -40,11 +40,50 @@ class ShowDetails {
   }
 }
 
+class StreamUrls {
+  final List<String> sd = [];
+  final List<String> hd = [];
+}
+
 class EpisodeDetails {
   String? url;
   String? title;
-  String? videoLink;
-  EpisodeDetails({this.url, this.title, this.videoLink});
+  StreamUrls streamUrls;
+
+  bool hasStreams() {
+    return streamUrls.hd.isNotEmpty || streamUrls.sd.isNotEmpty;
+  }
+
+  Map<String, String> getResolutions() {
+    var ret = <String, String>{};
+    for (int i = 0; i < streamUrls.hd.length; i++) {
+      if (i == 0) {
+        ret['720p'] = streamUrls.hd[i];
+      } else {
+        ret['720p_${i}'] = streamUrls.hd[i];
+      }
+    }
+    for (int i = 0; i < streamUrls.sd.length; i++) {
+      if (i == 0) {
+        ret['360p'] = streamUrls.sd[i];
+      } else {
+        ret['360p_${i}'] = streamUrls.sd[i];
+      }
+    }
+    return ret;
+  }
+
+  String? getAnyStream() {
+    if (streamUrls.hd.isNotEmpty) {
+      return streamUrls.hd.first;
+    }
+    if (streamUrls.sd.isNotEmpty) {
+      return streamUrls.sd.first;
+    }
+    return null;
+  }
+
+  EpisodeDetails({this.url, this.title, required this.streamUrls});
 }
 
 class RecentEpisode {

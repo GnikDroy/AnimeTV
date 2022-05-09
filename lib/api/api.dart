@@ -8,11 +8,43 @@ import 'package:anime_tv/api/models.dart';
 import 'package:flutter/foundation.dart';
 
 class Api {
-  static const corsProxy =
-      kIsWeb ? 'https://api.codetabs.com/v1/proxy?quest=' : '';
-  static const server = corsProxy + 'https://www.wcostream.com';
+  static const server = 'https://www.wcostream.com';
 
   static const statusOk = 200;
+
+  static Future<StreamUrls> getStreamUrls(String apiUrl) async {
+    final response = await http.get(
+      Uri.parse(Api.server + apiUrl),
+      headers: {
+        'referrer': Api.server,
+        'x-requested-with': 'XMLHttpRequest',
+      },
+    );
+    final json = Map<String, String>.from(jsonDecode(response.body));
+    final ret = StreamUrls();
+    if (json['server'] != '') {
+      if (json['hd'] != '') {
+        ret.hd.add("${json['server']}/getvid?evid=${json['hd']}");
+      }
+      if (json['enc'] != '') {
+        ret.sd.add("${json['server']}/getvid?evid=${json['enc']}");
+      }
+    }
+    if (json['cdn'] != '') {
+      if (json['hd'] != '') {
+        ret.hd.add("${json['cdn']}/getvid?evid=${json['hd']}");
+      }
+      if (json['enc'] != '') {
+        ret.sd.add("${json['cdn']}/getvid?evid=${json['enc']}");
+      }
+    }
+    return ret;
+  }
+
+  static Future<String?> getJsonApiLink(String hiddenLink) async {
+    final response = await http.get(Uri.parse(hiddenLink));
+    return RegExp(r'get\("(.*?)"\)').firstMatch(response.body)?.group(1);
+  }
 
   static String? _decodeVideoLink(String b64, int num) {
     final js = b64
@@ -30,7 +62,7 @@ class Api {
   }
 
   static Future<EpisodeDetails> getEpisodeDetails(String url) async {
-    var details = EpisodeDetails(url: url);
+    var details = EpisodeDetails(url: url, streamUrls: StreamUrls());
 
     final response = await http.get(Uri.parse(url));
     final document = parser.parse(response.body);
@@ -44,7 +76,13 @@ class Api {
           RegExp(r'\)\) - (\d+)').firstMatch(videoText)?.group(1) ?? '');
 
       if (b64 != null && num != null) {
-        details.videoLink = _decodeVideoLink(b64, num);
+        final videoLink = _decodeVideoLink(b64, num);
+        if (videoLink != null) {
+          final jsonUrl = await getJsonApiLink(videoLink);
+          if (jsonUrl != null) {
+            details.streamUrls = await getStreamUrls(jsonUrl);
+          }
+        }
       }
     } else {
       log('Error: Fetch request returned status code ${response.statusCode}');
@@ -74,8 +112,11 @@ class Api {
 
       details.episodeList = document
           .querySelectorAll('div#catlist-listview>ul>li>a')
-          .map((ep) =>
-              EpisodeDetails(title: ep.text.trim(), url: ep.attributes['href']))
+          .map((ep) => EpisodeDetails(
+                title: ep.text.trim(),
+                url: ep.attributes['href'],
+                streamUrls: StreamUrls(),
+              ))
           .toList();
     } else {
       log('Error: Fetch request returned status code ${response.statusCode}');
@@ -142,6 +183,7 @@ class Api {
               episode: EpisodeDetails(
                 title: e.children[1].text.trim(),
                 url: e.children[0].children[0].attributes['href'],
+                streamUrls: StreamUrls(),
               ),
             ),
           )
