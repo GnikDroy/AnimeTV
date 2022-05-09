@@ -54,53 +54,56 @@ class FavoriteShow {
 class WatchedEpisodes extends ChangeNotifier {
   static const key = 'watchedEpisodes';
   final Preference<String> preference;
+  List<WatchedEpisode>? watchedEpisodes;
 
   WatchedEpisodes(StreamingSharedPreferences prefs)
       : preference = prefs.getString(WatchedEpisodes.key, defaultValue: '[]');
 
   List<WatchedEpisode> get() {
-    List<dynamic> json = jsonDecode(preference.getValue());
-    return json
-        .cast<Map<String, dynamic>>()
-        .map<WatchedEpisode>(WatchedEpisode.fromJson)
-        .toList();
+    if (watchedEpisodes == null) {
+      List<dynamic> json = jsonDecode(preference.getValue());
+      watchedEpisodes = json
+          .cast<Map<String, dynamic>>()
+          .map<WatchedEpisode>(WatchedEpisode.fromJson)
+          .toList();
+    }
+    return watchedEpisodes!;
   }
 
-  void set(List<WatchedEpisode> episodes) {
-    preference.setValue(jsonEncode(episodes));
+  Future<void> set(List<WatchedEpisode> episodes) async {
+    watchedEpisodes = episodes;
+    await preference.setValue(jsonEncode(episodes));
+    notifyListeners();
   }
 
   List<String> get episodeUrls => get().map((x) => x.url).toList();
 
-  void setTimestamp(String url, Duration duration) {
+  Future<void> setTimestamp(String url, Duration duration) async {
     if (!isPresent(url)) add(url);
     final episodes = get();
     for (final episode in episodes) {
       if (episode.url == url) {
         episode.timestamp = duration;
-        set(episodes);
-        return;
+        await set(episodes);
       }
     }
   }
 
   bool isPresent(String url) => episodeUrls.contains(url);
 
-  void add(String url) {
+  Future<void> add(String url) async {
     if (!isPresent(url)) {
       final episodes = get();
       episodes.add(WatchedEpisode(url: url));
-      set(episodes);
-      notifyListeners();
+      await set(episodes);
     }
   }
 
-  void remove(String url) {
+  Future<void> remove(String url) async {
     if (isPresent(url)) {
       final episodes = get();
       episodes.removeWhere((x) => x.url == url);
-      set(episodes);
-      notifyListeners();
+      await set(episodes);
     }
   }
 }
@@ -119,8 +122,8 @@ class FavoriteShows extends ChangeNotifier {
         .toList();
   }
 
-  void set(List<FavoriteShow> favorites) {
-    preference.setValue(json.encode(favorites));
+  Future<void> set(List<FavoriteShow> favorites) async {
+    await preference.setValue(json.encode(favorites));
     notifyListeners();
   }
 
@@ -128,11 +131,11 @@ class FavoriteShows extends ChangeNotifier {
     return get().fold<bool>(false, (prev, show) => prev || show.url == url);
   }
 
-  void toggle(Show details) {
-    isPresent(details.url) ? remove(details) : add(details);
+  Future<void> toggle(Show details) async {
+    isPresent(details.url) ? await remove(details) : await add(details);
   }
 
-  void add(Show details) {
+  Future<void> add(Show details) async {
     if (!isPresent(details.url)) {
       final shows = get();
       shows.add(FavoriteShow(
@@ -141,15 +144,15 @@ class FavoriteShows extends ChangeNotifier {
         description: details.description,
         image: details.image,
       ));
-      set(shows);
+      await set(shows);
     }
   }
 
-  void remove(Show details) {
+  Future<void> remove(Show details) async {
     if (isPresent(details.url)) {
       final favoriteShows = get();
       favoriteShows.removeWhere((show) => show.url == details.url);
-      set(favoriteShows);
+      await set(favoriteShows);
     }
   }
 }

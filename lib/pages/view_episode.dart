@@ -16,10 +16,9 @@ class ViewEpisode extends StatefulWidget {
 }
 
 class _ViewEpisodeState extends State<ViewEpisode> {
-  Episode? details;
-  late BetterPlayerController _betterPlayerController;
-  late BetterPlayerDataSource _betterPlayerDataSource;
-  bool loadError = false;
+  late Future<Episode> episode;
+  late BetterPlayerController _controller;
+  late BetterPlayerDataSource _dataSource;
 
   @override
   void setState(fn) {
@@ -28,60 +27,74 @@ class _ViewEpisodeState extends State<ViewEpisode> {
 
   @override
   void initState() {
-    Provider.of<WatchedEpisodes>(context, listen: false).add(widget.url);
+    final watchedEpisodes =
+        Provider.of<WatchedEpisodes>(context, listen: false);
+    watchedEpisodes.add(widget.url);
 
-    Api.getEpisodeDetails(widget.url).then(
-      (details) {
-        setState(() {
-          if (details.hasVideoSource()) {
-            this.details = details;
-            _betterPlayerDataSource = BetterPlayerDataSource(
-              BetterPlayerDataSourceType.network,
-              details.getSingleVideoSource(),
-              resolutions: details.getVideoResolutions(),
-            );
-            _betterPlayerController.setupDataSource(_betterPlayerDataSource);
-          } else {
-            loadError = true;
-          }
-        });
-      },
-      onError: (err) {
-        setState(() {
-          loadError = true;
-        });
-      },
-    );
+    final startDuration = watchedEpisodes
+        .get()
+        .firstWhere((x) => x.url == widget.url, orElse: () => WatchedEpisode())
+        .timestamp;
 
-    const betterPlayerConfiguration = BetterPlayerConfiguration(
+    final config = BetterPlayerConfiguration(
       aspectRatio: 9 / 16,
       fit: BoxFit.contain,
       autoPlay: true,
+      startAt: startDuration,
       fullScreenByDefault: true,
       autoDetectFullscreenDeviceOrientation: true,
     );
-    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
 
+    _controller = BetterPlayerController(config);
+    _controller.addEventsListener((event) async {
+      if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
+        final duration = await _controller.videoPlayerController?.position;
+        if (duration != null) {
+          await watchedEpisodes.setTimestamp(widget.url, duration);
+        }
+      }
+    });
+
+    episode = () async {
+      final details = await Api.getEpisodeDetails(widget.url);
+      if (details.hasVideoSource()) {
+        _dataSource = BetterPlayerDataSource(
+          BetterPlayerDataSourceType.network,
+          details.getSingleVideoSource(),
+          resolutions: details.getVideoResolutions(),
+        );
+        _controller.setupDataSource(_dataSource);
+      } else {
+        throw Exception('No video sources available.');
+      }
+      return details;
+    }();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget? body;
-
-    if (loadError) {
-      body = genericNetworkError;
-    } else {
-      body = LayoutBuilder(
-        builder: (context, constraints) => AspectRatio(
-          aspectRatio: constraints.maxWidth / constraints.maxHeight,
-          child: BetterPlayer(controller: _betterPlayerController),
-        ),
-      );
-    }
-    return Scaffold(
-      appBar: const AnimeTVAppBar(),
-      body: body,
+    return FutureBuilder(
+      future: episode,
+      builder: (_, AsyncSnapshot<Episode> snapshot) {
+        Widget? body;
+        if (snapshot.hasData) {
+          body = LayoutBuilder(
+            builder: (_, constraints) => AspectRatio(
+              aspectRatio: constraints.maxWidth / constraints.maxHeight,
+              child: BetterPlayer(controller: _controller),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          body = genericNetworkError;
+        } else {
+          body = const Center(child: CircularProgressIndicator());
+        }
+        return Scaffold(
+          appBar: const AnimeTVAppBar(),
+          body: body,
+        );
+      },
     );
   }
 }

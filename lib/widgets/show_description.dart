@@ -49,7 +49,8 @@ class _ShowDescriptionState extends State<ShowDescription> {
               preference: favoriteShows.preference,
               builder: (BuildContext context, String _) {
                 return IconButton(
-                  onPressed: () => favoriteShows.toggle(widget.details),
+                  onPressed: () async =>
+                      await favoriteShows.toggle(widget.details),
                   icon: Icon(Icons.star,
                       color: favoriteShows.isPresent(widget.details.url)
                           ? Colors.amber
