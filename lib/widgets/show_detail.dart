@@ -15,9 +15,7 @@ class ShowDetailView extends StatefulWidget {
 }
 
 class _ShowDetailViewState extends State<ShowDetailView> {
-  var details = Show();
-  bool loadComplete = false;
-  bool loadError = false;
+  late Future<Show> details;
 
   @override
   void setState(fn) {
@@ -31,62 +29,58 @@ class _ShowDetailViewState extends State<ShowDetailView> {
   }
 
   Future<void> onRefresh() {
-    return Api.getShowDetails(widget.url).then(
-      (details) {
-        setState(() {
-          this.details = details;
-          loadComplete = true;
-          loadError = false;
-        });
-      },
-      onError: (err) {
-        setState(() {
-          loadError = true;
-          loadComplete = false;
-        });
-      },
-    );
+    setState(() {
+      details = Api.getShowDetails(widget.url);
+    });
+    return details;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loadError) {
-      return genericNetworkError;
-    } else if (!loadComplete) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return FutureBuilder(
+      future: details,
+      builder: (context, AsyncSnapshot<Show> snapshot) {
+        if (snapshot.hasData) {
+          final cover = SizedBox(
+            height: MediaQuery.of(context).size.height / 2.0,
+            width: double.infinity,
+            child: FadeInImage(
+              image: (snapshot.data!.image.isEmpty
+                      ? const AssetImage('assets/cover_placeholder.jpg')
+                      : NetworkImage('https:' + snapshot.data!.image))
+                  as ImageProvider,
+              placeholder: const AssetImage('assets/cover_placeholder.jpg'),
+              fit: BoxFit.cover,
+            ),
+          );
 
-    final cover = SizedBox(
-      height: MediaQuery.of(context).size.height / 2.0,
-      width: double.infinity,
-      child: FadeInImage(
-        image: (details.image.isEmpty
-            ? const AssetImage('assets/cover_placeholder.jpg')
-            : NetworkImage('https:' + details.image)) as ImageProvider,
-        placeholder: const AssetImage('assets/cover_placeholder.jpg'),
-        fit: BoxFit.cover,
-      ),
-    );
-
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: ListView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        children: [
-          cover,
-          ShowDescription(details: details),
-          EpisodeList(
-            details: details,
-            reorder: () {
-              setState(() {
-                details.episodeList = details.episodeList.reversed.toList();
-              });
-            },
-          ),
-        ],
-      ),
+          return RefreshIndicator(
+            onRefresh: onRefresh,
+            child: ListView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              children: [
+                cover,
+                ShowDescription(details: snapshot.data!),
+                EpisodeList(
+                  details: snapshot.data!,
+                  reorder: () {
+                    setState(() {
+                      snapshot.data!.episodeList =
+                          snapshot.data!.episodeList.reversed.toList();
+                    });
+                  },
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return genericNetworkError;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

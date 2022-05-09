@@ -6,6 +6,19 @@ import 'package:anime_tv/pages/home/recent_episodes.dart';
 import 'package:anime_tv/pages/home/catalogue_group.dart';
 import 'package:anime_tv/widgets/app_bar.dart';
 
+class HomeSubPage {
+  final String label;
+  final IconData icon;
+  final Widget widget;
+  final Color accent;
+
+  const HomeSubPage(
+      {required this.label,
+      required this.icon,
+      required this.widget,
+      required this.accent});
+}
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -21,13 +34,12 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  BottomNavigationBar buildNavBar(List<Map<String, dynamic>> pages) {
+  BottomNavigationBar buildNavBar(List<HomeSubPage> pages) {
     final items = pages
         .map((x) => BottomNavigationBarItem(
-              icon: Icon(x['icon'] as IconData),
-              label: x['label'] as String,
-              // backgroundColor: _navigation_colors[index]
-              backgroundColor: x['accent'],
+              icon: Icon(x.icon),
+              label: x.label,
+              backgroundColor: x.accent,
             ))
         .toList();
 
@@ -44,41 +56,41 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    const pages = <Map<String, dynamic>>[
-      {
-        'label': 'Recent',
-        'icon': Icons.movie,
-        'widget': RecentEpisodesGrid(),
-        'accent': Colors.red,
-      },
-      {
-        'label': 'Catalogue',
-        'icon': Icons.video_collection,
-        'accent': Color.fromARGB(255, 33, 117, 243),
-        'widget': CatalogueGroup(
+    const pages = [
+      HomeSubPage(
+        label: 'Recent',
+        icon: Icons.movie,
+        widget: RecentEpisodesGrid(),
+        accent: Colors.red,
+      ),
+      HomeSubPage(
+        label: 'Catalogue',
+        icon: Icons.video_collection,
+        accent: Color.fromARGB(255, 33, 117, 243),
+        widget: CatalogueGroup(
           tabBarColor: Color.fromARGB(255, 33, 117, 243),
         ),
-      },
-      {
-        'label': 'Search',
-        'icon': Icons.search,
-        'widget': SearchView(),
-        'accent': Color.fromARGB(255, 136, 86, 223),
-      },
-      {
-        'label': 'Favorites',
-        'icon': Icons.star,
-        'widget': FavoriteShowsView(),
-        'accent': Color.fromARGB(255, 253, 164, 0),
-      },
+      ),
+      HomeSubPage(
+        label: 'Search',
+        icon: Icons.search,
+        widget: SearchView(),
+        accent: Color.fromARGB(255, 136, 86, 223),
+      ),
+      HomeSubPage(
+        label: 'Favorites',
+        icon: Icons.star,
+        widget: FavoriteShowsView(),
+        accent: Color.fromARGB(255, 253, 164, 0),
+      ),
     ];
 
     final scaffold = Scaffold(
-      appBar: AnimeTVAppBar(borderColor: pages[_navigationIdx]['accent']),
+      appBar: AnimeTVAppBar(borderColor: pages[_navigationIdx].accent),
       body: SlantGradientBackgroundContainer(
         child: IndexedStack(
           index: _navigationIdx,
-          children: pages.map((x) => x['widget'] as Widget).toList(),
+          children: pages.map((x) => x.widget).toList(),
         ),
       ),
       bottomNavigationBar: buildNavBar(pages),

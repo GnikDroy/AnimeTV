@@ -12,9 +12,12 @@ class RecentEpisodesGrid extends StatefulWidget {
 }
 
 class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
-  var popularList = <RecentEpisode>[];
-  bool loadComplete = false;
-  bool loadError = false;
+  late Future<List<RecentEpisode>> popularList;
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
 
   @override
   void initState() {
@@ -23,50 +26,42 @@ class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
   }
 
   Future<void> onRefresh() {
-    return Api.getRecentEpisodes().then(
-      (list) {
-        if (mounted) {
-          setState(() {
-            popularList = list;
-            loadComplete = true;
-            loadError = false;
-          });
-        }
-      },
-      onError: (err) {
-        if (mounted) {
-          setState(() {
-            loadError = true;
-            loadComplete = false;
-          });
-        }
-      },
-    );
+    setState(() {
+      popularList = Api.getRecentEpisodes();
+    });
+    return popularList;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loadError) {
-      return genericNetworkError;
-    } else if (!loadComplete) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    const double extent = 300;
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: GridView.builder(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: extent,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: extent / RecentEpisodeCard.height,
-        ),
-        itemBuilder: (_, index) => RecentEpisodeCard(popularList[index]),
-        itemCount: popularList.length,
-      ),
+    return FutureBuilder(
+      future: popularList,
+      builder:
+          (BuildContext context, AsyncSnapshot<List<RecentEpisode>> snapshot) {
+        if (snapshot.hasData) {
+          const double extent = 300;
+          return RefreshIndicator(
+            onRefresh: onRefresh,
+            child: GridView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: extent,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: extent / RecentEpisodeCard.height,
+              ),
+              itemBuilder: (_, index) =>
+                  RecentEpisodeCard(snapshot.data![index]),
+              itemCount: snapshot.data!.length,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return genericNetworkError;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

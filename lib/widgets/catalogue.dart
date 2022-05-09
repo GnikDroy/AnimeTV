@@ -21,13 +21,10 @@ class Catalogue extends StatefulWidget {
 
 class _CatalogueState extends State<Catalogue>
     with AutomaticKeepAliveClientMixin<Catalogue> {
-  var _catalogue = <Show>[];
+  late Future<List<Show>> _catalogue;
   var _filteredItemsIndices = <int>[];
 
   TextEditingController searchController = TextEditingController();
-
-  bool loadComplete = false;
-  bool loadError = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -44,28 +41,24 @@ class _CatalogueState extends State<Catalogue>
   }
 
   Future<void> onRefresh() {
-    return Api.getCatalogue(widget._category.url).then((value) {
-      setState(() {
-        _catalogue = value;
-        _filteredItemsIndices = List<int>.generate(_catalogue.length, (i) => i);
-        loadComplete = true;
-        loadError = false;
-      });
-    }, onError: (err) {
-      setState(() {
-        loadError = true;
-        loadComplete = false;
-      });
+    setState(() {
+      _catalogue = () async {
+        final catalogue = await Api.getCatalogue(widget._category.url);
+        _filteredItemsIndices =
+            List<int>.generate(catalogue.length, (i) => (i));
+        return catalogue;
+      }();
     });
+    return _catalogue;
   }
 
-  Widget buildListItem(int index) {
+  Widget buildListItem(int index, List<Show> catalogue) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         primary: Theme.of(context).primaryColor,
       ),
       onPressed: () {
-        final detail = _catalogue[_filteredItemsIndices[index]];
+        final detail = catalogue[_filteredItemsIndices[index]];
         if (widget._hasEpisodes) {
           if (detail.url.isNotEmpty) {
             Navigator.pushNamed(
@@ -85,7 +78,7 @@ class _CatalogueState extends State<Catalogue>
       child: Container(
         padding: const EdgeInsets.all(15),
         child: Text(
-          _catalogue[_filteredItemsIndices[index]].title,
+          catalogue[_filteredItemsIndices[index]].title,
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -94,10 +87,10 @@ class _CatalogueState extends State<Catalogue>
     );
   }
 
-  void filterResults(String query) {
+  void filterResults(String query, List<Show> catalogue) {
     query = query.toLowerCase();
     _filteredItemsIndices.clear();
-    _catalogue.asMap().forEach((k, v) {
+    catalogue.asMap().forEach((k, v) {
       if (v.title.toLowerCase().contains(query)) {
         _filteredItemsIndices.add(k);
       }
@@ -107,49 +100,56 @@ class _CatalogueState extends State<Catalogue>
 
   @override
   Widget build(BuildContext context) {
-    if (loadError) {
-      return genericNetworkError;
-    } else if (!loadComplete) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final searchBar = TextField(
-      controller: searchController,
-      onChanged: filterResults,
-      decoration: const InputDecoration(
-        hintText: "Search",
-        prefixIcon: Icon(Icons.search),
-        isDense: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15.0),
-          ),
-        ),
-      ),
-    );
-
-    final listView = RefreshIndicator(
-      onRefresh: onRefresh,
-      child: ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(5),
-        itemCount: _filteredItemsIndices.length,
-        itemBuilder: (context, index) => buildListItem(index),
-        separatorBuilder: (context, index) => const SizedBox(height: 8),
-      ),
-    );
-
     super.build(context);
-    return Column(
-      children: [
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: searchBar,
-        ),
-        const SizedBox(height: 8),
-        Expanded(child: listView),
-      ],
+
+    return FutureBuilder(
+      future: _catalogue,
+      builder: (context, AsyncSnapshot<List<Show>> snapshot) {
+        if (snapshot.hasData) {
+          final searchBar = TextField(
+            controller: searchController,
+            onChanged: (x) => filterResults(x, snapshot.data!),
+            decoration: const InputDecoration(
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search),
+              isDense: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15.0),
+                ),
+              ),
+            ),
+          );
+
+          final listView = RefreshIndicator(
+            onRefresh: onRefresh,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(5),
+              itemCount: _filteredItemsIndices.length,
+              itemBuilder: (context, index) =>
+                  buildListItem(index, snapshot.data!),
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
+            ),
+          );
+
+          return Column(
+            children: [
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: searchBar,
+              ),
+              const SizedBox(height: 8),
+              Expanded(child: listView),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return genericNetworkError;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

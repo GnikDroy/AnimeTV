@@ -69,14 +69,10 @@ class _ShowDescriptionState extends State<ShowDescription> {
       spacing: 8,
       runSpacing: 8,
       children: widget.details.genreList
-          .map(
-            (x) => Chip(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              label: Text(
-                x,
-              ),
-            ),
-          )
+          .map((x) => Chip(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                label: Text(x),
+              ))
           .toList(),
     );
 

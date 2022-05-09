@@ -14,10 +14,8 @@ class SearchResultsView extends StatefulWidget {
 }
 
 class _SearchResultsViewState extends State<SearchResultsView> {
-  var searchResults = <Show>[];
+  late Future<List<Show>> searchResults;
   static const double cardHeight = 400;
-  bool loadComplete = false;
-  bool loadError = false;
 
   @override
   void setState(fn) {
@@ -26,84 +24,80 @@ class _SearchResultsViewState extends State<SearchResultsView> {
 
   @override
   void initState() {
-    assert(widget.query.isNotEmpty);
     onRefresh();
     super.initState();
   }
 
   Future<void> onRefresh() {
-    return Api.searchShow(widget.query).then((shows) {
-      setState(() {
-        searchResults = shows;
-        loadComplete = true;
-        loadError = false;
-      });
-    }, onError: (err) {
-      setState(() {
-        loadComplete = false;
-        loadError = true;
-      });
+    setState(() {
+      searchResults = Api.searchShow(widget.query);
     });
+    return searchResults;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loadError) {
-      return genericNetworkError;
-    } else if (!loadComplete) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return FutureBuilder(
+        future: searchResults,
+        builder: (context, AsyncSnapshot<List<Show>> snapshot) {
+          if (snapshot.hasData) {
+            var widgets = <Widget>[];
+            for (final details in snapshot.data!) {
+              final image = (details.image.isEmpty
+                  ? const AssetImage('assets/cover_placeholder.jpg')
+                  : NetworkImage(details.image)) as ImageProvider;
 
-    var widgets = <Widget>[];
-    for (final details in searchResults) {
-      final image = (details.image.isEmpty
-          ? const AssetImage('assets/cover_placeholder.jpg')
-          : NetworkImage(details.image)) as ImageProvider;
+              widgets.add(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      ShowDetailRoute.routeName,
+                      arguments: details.url,
+                    );
+                  },
+                  child: ImageCard(
+                      title: details.title, image: image, height: cardHeight),
+                ),
+              );
+            }
 
-      widgets.add(
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              ShowDetailRoute.routeName,
-              arguments: details.url,
-            );
-          },
-          child:
-              ImageCard(title: details.title, image: image, height: cardHeight),
-        ),
-      );
-    }
+            const double extent = 300;
+            final ret = Column(children: [
+              const SizedBox(height: 10),
+              Text(
+                "${widgets.length} results for '${widget.query}'",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: extent,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: extent / (cardHeight),
+                  ),
+                  itemBuilder: (_, index) => widgets[index],
+                  itemCount: widgets.length,
+                ),
+              ),
+            ]);
 
-    const double extent = 300;
-    final ret = Column(children: [
-      const SizedBox(height: 10),
-      Text(
-        "${widgets.length} results for '${widget.query}'",
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 10),
-      Expanded(
-        child: GridView.builder(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: extent,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: extent / (cardHeight),
-          ),
-          itemBuilder: (_, index) => widgets[index],
-          itemCount: widgets.length,
-        ),
-      ),
-    ]);
-
-    return RefreshIndicator(onRefresh: onRefresh, child: ret);
+            return RefreshIndicator(onRefresh: onRefresh, child: ret);
+          } else if (snapshot.hasError) {
+            return genericNetworkError;
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
