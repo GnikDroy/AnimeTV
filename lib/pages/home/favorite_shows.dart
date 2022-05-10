@@ -1,4 +1,3 @@
-import 'package:anime_tv/api/models.dart';
 import 'package:anime_tv/models.dart';
 import 'package:anime_tv/routes.dart';
 import 'package:anime_tv/widgets/image_card.dart';

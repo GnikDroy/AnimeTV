@@ -203,7 +203,6 @@ class _CustomPlayerMaterialControlsState
                           } else {
                             Navigator.pop(context);
                           }
-                          ;
                         }),
                     const Spacer(),
                     if (_controlsConfiguration.enablePip)

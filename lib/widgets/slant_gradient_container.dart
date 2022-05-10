@@ -20,8 +20,8 @@ class SlantGradientBackgroundContainer extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: colors ??
                 [
+                  Theme.of(context).scaffoldBackgroundColor.lighten(0.05),
                   Theme.of(context).scaffoldBackgroundColor,
-                  Theme.of(context).scaffoldBackgroundColor.darken(),
                 ]),
       ),
       child: child,

@@ -24,7 +24,6 @@ class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
           fit: BoxFit.fitHeight,
           height: 50,
         ),
-        // size: 35,
       );
       titleWidgets.add(const SizedBox(width: 15));
     }
@@ -42,7 +41,7 @@ class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: borderColor ?? Theme.of(context).colorScheme.primary,
         ),
       ),
-      elevation: 0,
+      elevation: 10,
       backgroundColor: Theme.of(context).primaryColor,
       title: title,
     );

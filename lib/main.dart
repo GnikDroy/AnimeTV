@@ -29,7 +29,12 @@ class AnimeTV extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Anime TV',
-        theme: ThemeData.dark(),
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            brightness: Brightness.dark,
+          ),
+        ),
         initialRoute: '/',
         routes: {
           '/': (context) => const Home(),

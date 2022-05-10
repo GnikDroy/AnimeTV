@@ -190,9 +190,9 @@ class Api {
           )
           .where((e) => e.url.isNotEmpty && e.cover.isNotEmpty)
           .toList();
-      recentEpisodes.forEach((e) {
-        e.cover = 'https:${e.cover}';
-      });
+      for (var ep in recentEpisodes) {
+        ep.cover = 'https:${ep.cover}';
+      }
       return recentEpisodes;
     } else {
       log('Error: Fetch request returned status code ${response.statusCode}');

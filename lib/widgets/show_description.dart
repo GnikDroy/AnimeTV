@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-import 'package:anime_tv/utils.dart';
 
 class ShowDescription extends StatefulWidget {
   const ShowDescription({Key? key, required this.details}) : super(key: key);
@@ -33,7 +32,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
 
     final episodeText = widget.details.episodeList.isEmpty
         ? ''
-        : '${widget.details.episodeList.length} Episodes';
+        : 'Episodes: ${widget.details.episodeList.length}';
 
     final controls = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,27 +58,7 @@ class _ShowDescriptionState extends State<ShowDescription> {
                 );
               });
         }),
-        // IconButton(
-        //   onPressed: () => {},
-        //   icon: Icon(Icons.star, color: true ? Colors.amber : null),
-        // ),
       ],
-    );
-
-    final genreTags = Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: widget.details.genreList
-          .map((x) => Chip(
-                backgroundColor: Colors
-                    .primaries[x.hashCode % Colors.primaries.length]
-                    .darken(),
-                label: Text(
-                  x,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ))
-          .toList(),
     );
 
     final plot = Text(
@@ -96,8 +75,6 @@ class _ShowDescriptionState extends State<ShowDescription> {
           controls,
           const SizedBox(height: 15),
           plot,
-          const SizedBox(height: 15),
-          genreTags,
         ],
       ),
     );

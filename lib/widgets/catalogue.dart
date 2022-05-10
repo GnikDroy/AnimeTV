@@ -81,6 +81,7 @@ class _CatalogueState extends State<Catalogue>
           catalogue[_filteredItemsIndices[index]].title,
           style: const TextStyle(
             fontSize: 16,
+            color: Colors.white,
           ),
         ),
       ),

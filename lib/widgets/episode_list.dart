@@ -21,8 +21,10 @@ class EpisodeList extends StatelessWidget {
           return PreferenceBuilder(
             preference: watchedUrls.preference,
             builder: (BuildContext context, _) {
+              final bool isWatched = watchedUrls.isPresent(ep.url);
+              final opacity = isWatched ? 0.6 : 1.0;
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.all(5),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -36,16 +38,26 @@ class EpisodeList extends StatelessWidget {
                         arguments: ep.url,
                       );
                     },
-                    icon: Icon(Icons.play_circle,
-                        color: watchedUrls.isPresent(ep.url)
-                            ? Colors.grey
-                            : Colors.white),
+                    icon: Opacity(
+                      opacity: opacity,
+                      child: const Icon(
+                        Icons.play_circle,
+                        color: Colors.white,
+                      ),
+                    ),
                     label: Padding(
                       padding: const EdgeInsets.all(18),
-                      child: Text(
-                        ep.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Opacity(
+                          opacity: opacity,
+                          child: Text(
+                            ep.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                   ),
