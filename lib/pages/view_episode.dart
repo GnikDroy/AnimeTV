@@ -1,7 +1,8 @@
-import 'package:anime_tv/models.dart';
-import 'package:anime_tv/widgets/app_bar.dart';
-import 'package:anime_tv/widgets/error_card.dart';
+import 'package:anime_tv/widgets/better_player_custom_controls.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:anime_tv/models.dart';
+import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,11 @@ class _ViewEpisodeState extends State<ViewEpisode> {
 
   @override
   void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+
     final watchedEpisodes =
         Provider.of<WatchedEpisodes>(context, listen: false);
     watchedEpisodes.add(widget.url);
@@ -37,12 +43,25 @@ class _ViewEpisodeState extends State<ViewEpisode> {
         .timestamp;
 
     final config = BetterPlayerConfiguration(
-      aspectRatio: 9 / 16,
+      aspectRatio: 16 / 9,
       fit: BoxFit.contain,
+      expandToFill: true,
       autoPlay: true,
       startAt: startDuration,
       fullScreenByDefault: true,
-      autoDetectFullscreenDeviceOrientation: true,
+      deviceOrientationsAfterFullScreen: [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight
+      ],
+      controlsConfiguration: BetterPlayerControlsConfiguration(
+          playerTheme: BetterPlayerTheme.custom,
+          customControlsBuilder: (controller, onControlsVisibilityChanged) =>
+              CustomPlayerMaterialControls(
+                onControlsVisibilityChanged: onControlsVisibilityChanged,
+                controlsConfiguration: const BetterPlayerControlsConfiguration(
+                    enableFullscreen: false),
+                // controller: _controller,
+              )),
     );
 
     _controller = BetterPlayerController(config);
@@ -73,26 +92,30 @@ class _ViewEpisodeState extends State<ViewEpisode> {
   }
 
   @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: episode,
       builder: (_, AsyncSnapshot<Episode> snapshot) {
-        Widget? body;
-        if (snapshot.hasData) {
-          body = LayoutBuilder(
-            builder: (_, constraints) => AspectRatio(
-              aspectRatio: constraints.maxWidth / constraints.maxHeight,
-              child: BetterPlayer(controller: _controller),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          body = genericNetworkError;
-        } else {
-          body = const Center(child: CircularProgressIndicator());
-        }
         return Scaffold(
-          appBar: const AnimeTVAppBar(),
-          body: body,
+          backgroundColor: Colors.black,
+          body: snapshot.hasData
+              ? BetterPlayer(controller: _controller)
+              : snapshot.hasError
+                  ? genericNetworkError
+                  : const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
         );
       },
     );

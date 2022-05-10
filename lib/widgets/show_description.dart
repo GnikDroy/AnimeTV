@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:anime_tv/utils.dart';
 
 class ShowDescription extends StatefulWidget {
   const ShowDescription({Key? key, required this.details}) : super(key: key);
@@ -70,8 +71,13 @@ class _ShowDescriptionState extends State<ShowDescription> {
       runSpacing: 8,
       children: widget.details.genreList
           .map((x) => Chip(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                label: Text(x),
+                backgroundColor: Colors
+                    .primaries[x.hashCode % Colors.primaries.length]
+                    .darken(),
+                label: Text(
+                  x,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ))
           .toList(),
     );
