@@ -49,6 +49,7 @@ class _ViewEpisodeState extends State<ViewEpisode> {
       autoPlay: true,
       startAt: startDuration,
       fullScreenByDefault: true,
+      allowedScreenSleep: false,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight
