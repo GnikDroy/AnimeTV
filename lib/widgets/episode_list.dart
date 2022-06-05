@@ -23,6 +23,7 @@ class EpisodeList extends StatelessWidget {
             builder: (BuildContext context, _) {
               final bool isWatched = watchedUrls.isPresent(ep.url);
               final opacity = isWatched ? 0.6 : 1.0;
+              final icon = isWatched ? Icons.check : Icons.play_circle;
               return Padding(
                 padding: const EdgeInsets.all(5),
                 child: SizedBox(
@@ -40,10 +41,7 @@ class EpisodeList extends StatelessWidget {
                     },
                     icon: Opacity(
                       opacity: opacity,
-                      child: const Icon(
-                        Icons.play_circle,
-                        color: Colors.white,
-                      ),
+                      child: Icon(icon, color: Colors.white),
                     ),
                     label: Padding(
                       padding: const EdgeInsets.all(18),
