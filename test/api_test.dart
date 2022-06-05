@@ -19,9 +19,12 @@ void main() {
 
   test('Get Episode Details', () async {
     final results = await Api.getEpisodeDetails(
-        'https://www.wcostream.com/bleach-movie-3-fade-to-black-english-subbed');
+        'https://www.wcostream.com/bleach-episode-360-english-subbed');
+
     expect(results.title.isNotEmpty, true);
     expect(results.url.isNotEmpty, true);
+    expect(results.next.isNotEmpty, true);
+    expect(results.prev.isNotEmpty, true);
     expect(
         results.videoSource.sd.isNotEmpty || results.videoSource.hd.isNotEmpty,
         true);

@@ -54,15 +54,6 @@ class _ViewEpisodeState extends State<ViewEpisode> {
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight
       ],
-      controlsConfiguration: BetterPlayerControlsConfiguration(
-          playerTheme: BetterPlayerTheme.custom,
-          customControlsBuilder: (controller, onControlsVisibilityChanged) =>
-              CustomPlayerMaterialControls(
-                onControlsVisibilityChanged: onControlsVisibilityChanged,
-                controlsConfiguration: const BetterPlayerControlsConfiguration(
-                    enableFullscreen: false),
-                // controller: _controller,
-              )),
     );
 
     _controller = BetterPlayerController(config);
@@ -108,6 +99,22 @@ class _ViewEpisodeState extends State<ViewEpisode> {
     return FutureBuilder(
       future: episode,
       builder: (_, AsyncSnapshot<Episode> snapshot) {
+        if (snapshot.hasData) {
+          _controller.setBetterPlayerControlsConfiguration(
+            BetterPlayerControlsConfiguration(
+              playerTheme: BetterPlayerTheme.custom,
+              customControlsBuilder:
+                  (controller, onControlsVisibilityChanged) =>
+                      CustomPlayerMaterialControls(
+                onControlsVisibilityChanged: onControlsVisibilityChanged,
+                controlsConfiguration: const BetterPlayerControlsConfiguration(
+                    enableFullscreen: false),
+                nextUrl: snapshot.data!.next,
+                prevUrl: snapshot.data!.prev,
+              ),
+            ),
+          );
+        }
         return Scaffold(
           backgroundColor: Colors.black,
           body: snapshot.hasData

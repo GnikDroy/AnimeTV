@@ -67,6 +67,10 @@ class Api {
     final document = parser.parse(response.body);
     details.title =
         document.querySelector('.ilxbaslik8>h1>a')?.text ?? details.title;
+    details.next =
+        document.querySelector('a[rel="next"]')?.attributes['href'] ?? '';
+    details.prev =
+        document.querySelector('a[rel="prev"]')?.attributes['href'] ?? '';
     final videoText = document.querySelector('div.iltext')?.text.trim() ?? '';
     if (response.statusCode == statusOk) {
       var b64 = RegExp(r'\[.*\]')

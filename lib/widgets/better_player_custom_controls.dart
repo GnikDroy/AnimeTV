@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:anime_tv/routes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:better_player/better_player.dart';
@@ -13,11 +14,15 @@ class CustomPlayerMaterialControls extends StatefulWidget {
 
   ///Controls config
   final BetterPlayerControlsConfiguration controlsConfiguration;
+  final String nextUrl;
+  final String prevUrl;
 
   const CustomPlayerMaterialControls({
     Key? key,
     required this.onControlsVisibilityChanged,
     required this.controlsConfiguration,
+    this.nextUrl = '',
+    this.prevUrl = '',
   }) : super(key: key);
 
   @override
@@ -204,6 +209,44 @@ class _CustomPlayerMaterialControlsState
                             Navigator.pop(context);
                           }
                         }),
+                    const Spacer(),
+                    OutlinedButton(
+                        onPressed: widget.prevUrl.isEmpty
+                            ? null
+                            : () {
+                                if (_betterPlayerController?.isFullScreen ??
+                                    false) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                                Navigator.pushNamed(
+                                  context,
+                                  ViewEpisodeRoute.routeName,
+                                  arguments: widget.prevUrl,
+                                );
+                              },
+                        child: const Text("Previous Episode")),
+                    const Spacer(),
+                    OutlinedButton(
+                        onPressed: widget.nextUrl.isEmpty
+                            ? null
+                            : () {
+                                if (_betterPlayerController?.isFullScreen ??
+                                    false) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                                Navigator.pushNamed(
+                                  context,
+                                  ViewEpisodeRoute.routeName,
+                                  arguments: widget.nextUrl,
+                                );
+                              },
+                        child: const Text("Next Episode")),
                     const Spacer(),
                     if (_controlsConfiguration.enablePip)
                       _buildPipButtonWrapperWidget(

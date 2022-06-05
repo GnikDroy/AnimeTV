@@ -51,6 +51,8 @@ class VideoSource {
 class Episode {
   String url;
   String title;
+  String prev;
+  String next;
   VideoSource videoSource = VideoSource();
 
   bool hasVideoSource() {
@@ -86,7 +88,7 @@ class Episode {
     return '';
   }
 
-  Episode({this.url = '', this.title = ''});
+  Episode({this.url = '', this.title = '', this.prev = '', this.next = ''});
 }
 
 class RecentEpisode {
