@@ -33,6 +33,8 @@ class _ViewEpisodeState extends State<ViewEpisode> {
       DeviceOrientation.landscapeLeft,
     ]);
 
+    Provider.of<LastEpisode>(context, listen: false).set(widget.url);
+
     final watchedEpisodes =
         Provider.of<WatchedEpisodes>(context, listen: false);
     watchedEpisodes.add(widget.url);

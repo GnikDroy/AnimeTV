@@ -50,6 +50,21 @@ class FavoriteShow {
       };
 }
 
+class LastEpisode extends ChangeNotifier {
+  static const key = 'lastEpisode';
+  final Preference<String> preference;
+
+  LastEpisode(StreamingSharedPreferences prefs)
+      : preference = prefs.getString(LastEpisode.key, defaultValue: '');
+
+  String get() => preference.getValue();
+
+  Future<void> set(String url) async {
+    await preference.setValue(url);
+    notifyListeners();
+  }
+}
+
 class WatchedEpisodes extends ChangeNotifier {
   static const key = 'watchedEpisodes';
   final Preference<String> preference;

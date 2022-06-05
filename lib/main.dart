@@ -15,6 +15,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => WatchedEpisodes(prefs)),
         ChangeNotifierProvider(create: (context) => FavoriteShows(prefs)),
+        ChangeNotifierProvider(create: (context) => LastEpisode(prefs)),
       ],
       child: const AnimeTV(),
     ),
