@@ -36,64 +36,66 @@ class _ShowDetailViewState extends State<ShowDetailView> {
     return details;
   }
 
+  Widget buildCoverWithOverlay(Show show) {
+    final cover = SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: FadeInImage(
+        image: (show.image.isEmpty
+            ? const AssetImage('assets/cover_placeholder.jpg')
+            : NetworkImage(show.image)) as ImageProvider,
+        placeholder: const AssetImage('assets/cover_placeholder.jpg'),
+        fit: BoxFit.cover,
+      ),
+    );
+
+    final genreTags = Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: show.genreList
+          .map((genre) => Chip(
+                visualDensity: VisualDensity.compact,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                backgroundColor: Colors
+                    .primaries[genre.hashCode % Colors.accents.length]
+                    .darken(),
+                label: Text(
+                  genre,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList(),
+    );
+
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height / 2.5,
+      child: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          cover,
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.black12,
+          ),
+          Padding(
+            child: genreTags,
+            padding: const EdgeInsets.all(8),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: details,
       builder: (context, AsyncSnapshot<Show> snapshot) {
         if (snapshot.hasData) {
-          final cover = SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: FadeInImage(
-              image: (snapshot.data!.image.isEmpty
-                  ? const AssetImage('assets/cover_placeholder.jpg')
-                  : NetworkImage(snapshot.data!.image)) as ImageProvider,
-              placeholder: const AssetImage('assets/cover_placeholder.jpg'),
-              fit: BoxFit.cover,
-            ),
-          );
-
-          final genreTags = Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: snapshot.data!.genreList
-                .map(
-                  (genre) => Chip(
-                    visualDensity: VisualDensity.compact,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    backgroundColor: Colors
-                        .primaries[genre.hashCode % Colors.accents.length]
-                        .darken(),
-                    label: Text(
-                      genre,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                )
-                .toList(),
-          );
-
-          final stack = SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height / 2.5,
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                cover,
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-                Padding(
-                  child: genreTags,
-                  padding: const EdgeInsets.all(8),
-                ),
-              ],
-            ),
-          );
-
+          final show = snapshot.data!;
+          final coverWithOverlay = buildCoverWithOverlay(show);
           return RefreshIndicator(
             onRefresh: onRefresh,
             child: ListView(
@@ -101,14 +103,13 @@ class _ShowDetailViewState extends State<ShowDetailView> {
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               children: [
-                stack,
-                ShowDescription(details: snapshot.data!),
+                coverWithOverlay,
+                ShowDescription(details: show),
                 EpisodeList(
-                  details: snapshot.data!,
+                  details: show,
                   reorder: () {
                     setState(() {
-                      snapshot.data!.episodeList =
-                          snapshot.data!.episodeList.reversed.toList();
+                      show.episodeList = show.episodeList.reversed.toList();
                     });
                   },
                 ),

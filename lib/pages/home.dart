@@ -12,11 +12,12 @@ class HomeSubPage {
   final Widget widget;
   final Color accent;
 
-  const HomeSubPage(
-      {required this.label,
-      required this.icon,
-      required this.widget,
-      required this.accent});
+  const HomeSubPage({
+    required this.label,
+    required this.icon,
+    required this.widget,
+    required this.accent,
+  });
 }
 
 class Home extends StatefulWidget {
@@ -28,11 +29,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _navigationIdx = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   BottomNavigationBar buildNavBar(List<HomeSubPage> pages) {
     final items = pages

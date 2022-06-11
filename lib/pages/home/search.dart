@@ -40,16 +40,17 @@ class _SearchViewState extends State<SearchView> {
       child: TextField(
         controller: searchController,
         onSubmitted: (query) {
-          Navigator.pushNamed(context, SearchResultsRoute.routeName,
-              arguments: query);
+          Navigator.pushNamed(
+            context,
+            SearchResultsRoute.routeName,
+            arguments: query,
+          );
         },
         decoration: const InputDecoration(
           hintText: "Search",
           prefixIcon: Icon(Icons.search),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
         ),
       ),
@@ -57,11 +58,7 @@ class _SearchViewState extends State<SearchView> {
 
     final stack = Stack(
       alignment: Alignment.center,
-      children: [
-        poster,
-        overlay,
-        searchBar,
-      ],
+      children: [poster, overlay, searchBar],
     );
 
     return stack;

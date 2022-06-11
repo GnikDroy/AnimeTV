@@ -24,6 +24,22 @@ class EpisodeList extends StatelessWidget {
               final bool isWatched = watchedUrls.isPresent(ep.url);
               final opacity = isWatched ? 0.6 : 1.0;
               final icon = isWatched ? Icons.check : Icons.play_circle;
+              final label = Padding(
+                padding: const EdgeInsets.all(18),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Text(
+                      ep.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              );
+
               return Padding(
                 padding: const EdgeInsets.all(5),
                 child: SizedBox(
@@ -43,21 +59,7 @@ class EpisodeList extends StatelessWidget {
                       opacity: opacity,
                       child: Icon(icon, color: Colors.white),
                     ),
-                    label: Padding(
-                      padding: const EdgeInsets.all(18),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Opacity(
-                          opacity: opacity,
-                          child: Text(
-                            ep.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
+                    label: label,
                   ),
                 ),
               );

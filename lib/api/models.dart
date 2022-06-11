@@ -81,8 +81,7 @@ class Episode {
   String getSingleVideoSource() {
     if (videoSource.hd.isNotEmpty) {
       return videoSource.hd.first;
-    }
-    if (videoSource.sd.isNotEmpty) {
+    } else if (videoSource.sd.isNotEmpty) {
       return videoSource.sd.first;
     }
     return '';

@@ -23,13 +23,8 @@ class CatalogueGroup extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
-                children: categories
-                    .map(
-                      (x) => Catalogue(
-                        category: x,
-                      ),
-                    )
-                    .toList()),
+              children: categories.map((x) => Catalogue(category: x)).toList(),
+            ),
           ),
         ],
       ),

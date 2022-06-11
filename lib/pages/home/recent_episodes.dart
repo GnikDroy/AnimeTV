@@ -15,7 +15,7 @@ class RecentEpisodesGrid extends StatefulWidget {
 }
 
 class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
-  late Future<List<RecentEpisode>> popularList;
+  late Future<List<RecentEpisode>> _popularList;
 
   @override
   void setState(fn) {
@@ -30,61 +30,64 @@ class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
 
   Future<void> onRefresh() {
     setState(() {
-      popularList = Api.getRecentEpisodes();
+      _popularList = Api.getRecentEpisodes();
     });
-    return popularList;
+    return _popularList;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: popularList,
+      future: _popularList,
       builder:
           (BuildContext context, AsyncSnapshot<List<RecentEpisode>> snapshot) {
         if (snapshot.hasData) {
           const double extent = 300;
+          final gridView = GridView.builder(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: extent,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: extent / RecentEpisodeCard.height,
+            ),
+            itemBuilder: (_, index) => RecentEpisodeCard(snapshot.data![index]),
+            itemCount: snapshot.data!.length,
+          );
+
+          final continueWatchingBtn =
+              Consumer<LastEpisode>(builder: (context, lastEpisode, child) {
+            if (lastEpisode.get().isNotEmpty) {
+              return ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    ViewEpisodeRoute.routeName,
+                    arguments: lastEpisode.get(),
+                  );
+                },
+                icon: const Icon(Icons.movie),
+                label: const Text("Continue Watching"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(0, 50),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          });
+
           return RefreshIndicator(
             onRefresh: onRefresh,
             child: Stack(
               children: [
-                GridView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: extent,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: extent / RecentEpisodeCard.height,
-                  ),
-                  itemBuilder: (_, index) =>
-                      RecentEpisodeCard(snapshot.data![index]),
-                  itemCount: snapshot.data!.length,
+                gridView,
+                Positioned(
+                  child: continueWatchingBtn,
+                  bottom: 15,
+                  right: 15,
                 ),
-                Consumer<LastEpisode>(builder: (context, lastEpisode, child) {
-                  if (lastEpisode.get().isNotEmpty) {
-                    return Positioned(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            ViewEpisodeRoute.routeName,
-                            arguments: lastEpisode.get(),
-                          );
-                        },
-                        icon: const Icon(Icons.movie),
-                        label: const Text("Continue Watching"),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(0, 50),
-                        ),
-                      ),
-                      bottom: 15,
-                      right: 15,
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                }),
               ],
             ),
           );

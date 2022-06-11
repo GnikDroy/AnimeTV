@@ -135,7 +135,7 @@ class Api {
     final response = await http.get(Uri.parse(server + category));
     if (response.statusCode == statusOk) {
       final document = parser.parse(response.body);
-      var showList = document
+      final showList = document
           .querySelectorAll('div.ddmcc>ul>ul>li>a')
           .map(
             (e) => Show(

@@ -12,7 +12,7 @@ class FavoriteShowsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<FavoriteShows>(
       builder: (context, favoriteShows, child) {
-        var widgets = <Widget>[];
+        var showCards = <Widget>[];
         final favorites = favoriteShows.get();
 
         for (final details in favorites) {
@@ -20,7 +20,7 @@ class FavoriteShowsView extends StatelessWidget {
               ? const AssetImage('assets/cover_placeholder.jpg')
               : NetworkImage(details.image)) as ImageProvider;
 
-          widgets.add(
+          showCards.add(
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -44,8 +44,8 @@ class FavoriteShowsView extends StatelessWidget {
             mainAxisSpacing: 10,
             childAspectRatio: extent / (cardHeight),
           ),
-          itemBuilder: (_, index) => widgets[index],
-          itemCount: widgets.length,
+          itemBuilder: (_, index) => showCards[index],
+          itemCount: showCards.length,
         );
       },
     );

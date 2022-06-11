@@ -29,6 +29,5 @@ class ErrorCard extends StatelessWidget {
 const genericNetworkError = ErrorCard(
   "Cannot connect to server. "
   "Make sure you have access to the internet. "
-  "Retry after a brief period of time. "
-  "If problem persists, report this to the developer.",
+  "If problem persists, report to the developer.",
 );
