@@ -71,7 +71,7 @@ class Api {
         document.querySelector('a[rel="next"]')?.attributes['href'] ?? '';
     details.prev =
         document.querySelector('a[rel="prev"]')?.attributes['href'] ?? '';
-    final videoText = document.querySelector('div.iltext')?.text.trim() ?? '';
+    final videoText = document.querySelector('td.larkax')?.text.trim() ?? '';
     if (response.statusCode == statusOk) {
       var b64 = RegExp(r'\[.*\]')
           .firstMatch(videoText)
