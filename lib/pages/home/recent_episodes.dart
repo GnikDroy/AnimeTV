@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+import 'package:skeleton_text/skeleton_text.dart';
+
 import 'package:anime_tv/models.dart';
 import 'package:anime_tv/routes.dart';
 import 'package:anime_tv/widgets/error_card.dart';
-import 'package:flutter/material.dart';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
 import 'package:anime_tv/widgets/recent_episode_card.dart';
-import 'package:provider/provider.dart';
+import 'package:anime_tv/utils.dart';
 
 class RecentEpisodesGrid extends StatefulWidget {
   const RecentEpisodesGrid({Key? key}) : super(key: key);
@@ -16,6 +20,7 @@ class RecentEpisodesGrid extends StatefulWidget {
 
 class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
   late Future<List<RecentEpisode>> _popularList;
+  static const double cardExtent = 300;
 
   @override
   void setState(fn) {
@@ -35,6 +40,33 @@ class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
     return _popularList;
   }
 
+  Widget buildSkeleton(BuildContext context) {
+    final skeleton = SkeletonAnimation(
+      shimmerColor: Theme.of(context).backgroundColor,
+      shimmerDuration: 800,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor.lighten(),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+
+    final gridView = GridView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: cardExtent,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: cardExtent / RecentEpisodeCard.height,
+      ),
+      itemBuilder: (_, index) => skeleton,
+      itemCount: 12,
+    );
+    return gridView;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -42,15 +74,14 @@ class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
       builder:
           (BuildContext context, AsyncSnapshot<List<RecentEpisode>> snapshot) {
         if (snapshot.hasData) {
-          const double extent = 300;
           final gridView = GridView.builder(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: extent,
+              maxCrossAxisExtent: cardExtent,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: extent / RecentEpisodeCard.height,
+              childAspectRatio: cardExtent / RecentEpisodeCard.height,
             ),
             itemBuilder: (_, index) => RecentEpisodeCard(snapshot.data![index]),
             itemCount: snapshot.data!.length,
@@ -94,7 +125,7 @@ class _RecentEpisodesGridState extends State<RecentEpisodesGrid> {
         } else if (snapshot.hasError) {
           return genericNetworkError;
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return buildSkeleton(context);
         }
       },
     );

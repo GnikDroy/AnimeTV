@@ -32,8 +32,9 @@ class AnimeTV extends StatelessWidget {
         title: 'Anime TV',
         theme: ThemeData.from(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.blue,
             brightness: Brightness.dark,
+            background: const Color.fromARGB(255, 15, 15, 15),
+            seedColor: Colors.blue,
           ),
         ),
         initialRoute: '/',

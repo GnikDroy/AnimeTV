@@ -48,9 +48,10 @@ class _SearchViewState extends State<SearchView> {
         },
         decoration: const InputDecoration(
           hintText: "Search",
+          fillColor: Colors.blue,
           prefixIcon: Icon(Icons.search),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
           ),
         ),
       ),

@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
+
+import 'package:skeleton_text/skeleton_text.dart';
+
 import 'package:anime_tv/routes.dart';
 import 'package:anime_tv/widgets/error_card.dart';
-import 'package:flutter/material.dart';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
+import 'package:anime_tv/utils.dart';
 
 class Catalogue extends StatefulWidget {
   final Category _category;
@@ -99,6 +103,56 @@ class _CatalogueState extends State<Catalogue>
     setState(() {});
   }
 
+  Widget buildSkeleton(BuildContext context) {
+    const searchSkeleton = TextField(
+      decoration: InputDecoration(
+        hintText: "Search",
+        prefixIcon: Icon(Icons.search),
+        isDense: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+      ),
+    );
+
+    final itemSkeleton = SkeletonAnimation(
+      shimmerColor: Theme.of(context).backgroundColor,
+      shimmerDuration: 800,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor.lighten(),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+
+    final listSkeleton = ListView.separated(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(5),
+      itemCount: 12,
+      itemBuilder: (context, index) => SizedBox(
+        child: itemSkeleton,
+        height: 40,
+        width: double.infinity,
+      ),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+    );
+
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: searchSkeleton,
+        ),
+        const SizedBox(height: 8),
+        Expanded(child: listSkeleton),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -116,7 +170,7 @@ class _CatalogueState extends State<Catalogue>
               isDense: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(15.0),
+                  Radius.circular(5.0),
                 ),
               ),
             ),
@@ -148,7 +202,7 @@ class _CatalogueState extends State<Catalogue>
         } else if (snapshot.hasError) {
           return genericNetworkError;
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return buildSkeleton(context);
         }
       },
     );

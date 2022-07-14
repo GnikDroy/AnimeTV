@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:skeleton_text/skeleton_text.dart';
+
 import 'package:anime_tv/widgets/error_card.dart';
 import 'package:anime_tv/api/api.dart';
 import 'package:anime_tv/api/models.dart';
@@ -34,6 +37,81 @@ class _ShowDetailViewState extends State<ShowDetailView> {
       details = Api.getShowDetails(widget.url);
     });
     return details;
+  }
+
+  Widget buildSkeleton(context) {
+    final skeleton = SkeletonAnimation(
+      shimmerColor: Theme.of(context).backgroundColor,
+      shimmerDuration: 800,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor.lighten(),
+        ),
+      ),
+    );
+
+    final coverSkeleton = SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height / 2.5,
+      child: skeleton,
+    );
+
+    final descriptionSkeleton = Padding(
+      padding: const EdgeInsets.all(25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2,
+            height: 30,
+            child: skeleton,
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3,
+                height: 20,
+                child: skeleton,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 4,
+                height: 20,
+                child: skeleton,
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          SizedBox(width: double.infinity, height: 150, child: skeleton),
+        ],
+      ),
+    );
+
+    final episodeListSkeleton = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: List.generate(12, (index) {
+          if (index % 2 == 0) {
+            return SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: skeleton,
+            );
+          } else {
+            return const SizedBox(height: 8);
+          }
+        }),
+      ),
+    );
+
+    return ListView(
+      children: [
+        coverSkeleton,
+        descriptionSkeleton,
+        episodeListSkeleton,
+      ],
+    );
   }
 
   Widget buildCoverWithOverlay(Show show) {
@@ -119,7 +197,7 @@ class _ShowDetailViewState extends State<ShowDetailView> {
         } else if (snapshot.hasError) {
           return genericNetworkError;
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return buildSkeleton(context);
         }
       },
     );

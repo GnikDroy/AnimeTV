@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:anime_tv/utils.dart';
 
 class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -42,7 +43,7 @@ class AnimeTVAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       elevation: 10,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).backgroundColor.lighten(0.06),
       title: title,
     );
   }
