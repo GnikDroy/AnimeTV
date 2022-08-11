@@ -104,22 +104,21 @@ class Api {
 
       details.title = document.querySelector('td>h2')?.text.trim() ?? '';
 
-      details.image = document
-              .querySelector('div#cat-img-desc>div>img')
-              ?.attributes['src'] ??
-          '';
+      details.image =
+          document.querySelector('div#cat-img-desc img')?.attributes['src'] ??
+              '';
       details.image = details.image == '' ? '' : 'https:${details.image}';
 
       details.description =
           document.querySelector('div#cat-img-desc>.iltext')?.text.trim() ?? '';
 
       details.genreList = document
-          .querySelectorAll('div#cat-genre>.wcobtn>a')
+          .querySelectorAll('div#cat-genre a')
           .map((g) => g.text.trim())
           .toList();
 
       details.episodeList = document
-          .querySelectorAll('div#catlist-listview>ul>li>a')
+          .querySelectorAll('div#catlist-listview a')
           .map((ep) => Episode(
                 title: ep.text.trim(),
                 url: ep.attributes['href'] ?? '',
@@ -136,7 +135,7 @@ class Api {
     if (response.statusCode == statusOk) {
       final document = parser.parse(response.body);
       final showList = document
-          .querySelectorAll('div.ddmcc>ul>ul>li>a')
+          .querySelectorAll('div.ddmcc a')
           .map(
             (e) => Show(
               title: e.text.trim(),
