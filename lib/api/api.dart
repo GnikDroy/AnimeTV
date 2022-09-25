@@ -7,7 +7,7 @@ import 'dart:developer';
 import 'package:anime_tv/api/models.dart';
 
 class Api {
-  static const server = 'https://www.wcostream.com';
+  static const server = 'https://www.wcostream.net';
 
   static const statusOk = 200;
 
@@ -100,7 +100,10 @@ class Api {
 
     final response = await http.get(Uri.parse(server + url));
     if (response.statusCode == statusOk) {
-      final document = parser.parse(response.body);
+      // It is preferred to use response.body instead of manually converting.
+      // But the site doesn't handle /anime/bleach page correctly
+      // since they don't use proper utf8. This is a workaround until that is fixed
+      final document = parser.parse(String.fromCharCodes(response.bodyBytes));
 
       details.title = document.querySelector('td>h2')?.text.trim() ?? '';
 
@@ -110,7 +113,7 @@ class Api {
       details.image = details.image == '' ? '' : 'https:${details.image}';
 
       details.description =
-          document.querySelector('div#cat-img-desc>.iltext')?.text.trim() ?? '';
+          document.querySelector('.iltext')?.text.trim() ?? '';
 
       details.genreList = document
           .querySelectorAll('div#cat-genre a')
