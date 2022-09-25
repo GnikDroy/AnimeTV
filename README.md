@@ -11,12 +11,12 @@ It has a low memory footprint, stores all information on your device and works o
 anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
 Currently, this app is not available in the App Store but you can view the releases page to download the apk file and install on your device.
 
-<img width="400" src="https://i.postimg.cc/sXpXJ1sd/Screenshot-1664121358.png"></img> <img width="400" align="right" src="https://i.postimg.cc/MKZTyWLN/Screenshot-1664121474.png"></img>
+<img width="400" src="screenshots/2.jpg"></img> <img width="400" align="right" src="screenshots/3.jpg"></img>
 
-<img src="https://i.postimg.cc/NGkF9ydR/Screenshot-1664121388.png"></img>
+<img src="screenshots/1.jpg"></img>
 
- <img src="https://i.postimg.cc/x1Q6gR7x/flutter-02.jpg" width="400" align="right">
- <img src="https://i.postimg.cc/QMx0ZMjc/flutter-03.jpg" width="400">
+ <img src="screenshots/4.jpg" width="400" align="right">
+ <img src="screenshots/5.jpg" width="400">
 
  ***
 ## Setting up
