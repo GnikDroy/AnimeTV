@@ -5,31 +5,20 @@
     
 <h3 align="center"> Watch your favorite anime on your device </h3>
 
-Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Supports Android and iOS supported by flutter. Officially tested in Android.
+Anime TV! is a cross-platform app that allows you to watch your favorite anime shows on your device. Supports Android and iOS supported by flutter. Officially tested on Android.
 
-It has a low memory footprint, stores all information on your device and works off the ~~[Anime1](http://www.anime1.com/)~~ [Wcostream](https://www.wcostream.com/) server. The app scrapes the site and provides a pleasant
+It has a low memory footprint, stores all information on your device and works off the ~~[Anime1](http://www.anime1.com/)~~ [Wcostream](https://www.wcostream.net/) server. The app scrapes the site and provides a pleasant
 anime viewing experience. Unlike other apps, this does not contain any ads and is distributed for free.
-Currently, this app is not available in the app store but you can build your apk file and install on your device.
+Currently, this app is not available in the App Store but you can view the releases page to download the apk file and install on your device.
 
- <img src="https://i.postimg.cc/mZ0X1RSG/flutter-01.jpg" width="400">  <img src="https://i.postimg.cc/x1Q6gR7x/flutter-02.jpg" width="400" align="right">   
- 
+<img width="400" src="https://i.postimg.cc/sXpXJ1sd/Screenshot-1664121358.png"></img> <img width="400" align="right" src="https://i.postimg.cc/MKZTyWLN/Screenshot-1664121474.png"></img>
+
+<img src="https://i.postimg.cc/NGkF9ydR/Screenshot-1664121388.png"></img>
+
+ <img src="https://i.postimg.cc/x1Q6gR7x/flutter-02.jpg" width="400" align="right">
+ <img src="https://i.postimg.cc/QMx0ZMjc/flutter-03.jpg" width="400">
+
  ***
- 
- <img src="https://i.postimg.cc/QMx0ZMjc/flutter-03.jpg" width="400">   <img src="https://i.postimg.cc/rw9QH428/flutter-04.jpg" width="400" align="right">
-
- 
- ![screenshot](https://i.postimg.cc/k51wJd5z/flutter-05.jpg)
-
-[url=https://postimg.cc/Sjf7HB5Z][img]https://i.postimg.cc/Sjf7HB5Z/flutter-01.jpg[/img][/url]
-
-[url=https://postimg.cc/PP6b5mdY][img]https://i.postimg.cc/PP6b5mdY/flutter-02.jpg[/img][/url]
-
-[url=https://postimg.cc/HrRQQdcL][img]https://i.postimg.cc/HrRQQdcL/flutter-03.jpg[/img][/url]
-
-[url=https://postimg.cc/sMvYQv28][img]https://i.postimg.cc/sMvYQv28/flutter-04.jpg[/img][/url]
-
-[url=https://postimg.cc/4KcpPqVQ][img]https://i.postimg.cc/4KcpPqVQ/flutter-05.jpg[/img][/url]
-
 ## Setting up
 
 Make sure you have flutter installed on your device, along with the necessary SDKs for your platform.
